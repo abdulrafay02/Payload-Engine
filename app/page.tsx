@@ -60,6 +60,17 @@ export default function PayloadApp() {
     setLoadData(prev => ({ ...prev, ...updates }));
   };
 
+  const handleReset = () => {
+    setLoadData({
+      origin: '',
+      destination: '',
+      loadedMiles: 0,
+      deadheadMiles: 0,
+      weight: 0,
+    });
+    setAiNote(null);
+  };
+
   const handleCommit = () => {
     if (!quote) return;
 
@@ -82,14 +93,9 @@ export default function PayloadApp() {
   };
 
   return (
-    <main suppressHydrationWarning className="min-h-screen bg-black flex flex-col items-center justify-center p-1 md:p-2 font-sans selection:bg-safety-orange selection:text-black">
-      {/* Background Grid */}
-      <div className="fixed inset-0 pointer-events-none opacity-20">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#333_1px,transparent_1px),linear-gradient(to_bottom,#333_1px,transparent_1px)] bg-[size:40px_40px]"></div>
-      </div>
-
+    <main suppressHydrationWarning className="min-h-screen bg-industrial-black flex flex-col items-center justify-center p-4 md:p-8 font-sans selection:bg-safety-orange selection:text-black">
       {/* Main Content Box */}
-      <div className="w-full max-w-xl z-10 flex flex-col brutalist-border bg-industrial-black shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+      <div className="w-full max-w-xl z-10 flex flex-col border-1 border-gray-600 bg-industrial-black">
         <TelemetryBar />
         
         <div className="flex flex-col">
@@ -98,6 +104,7 @@ export default function PayloadApp() {
             manualData={loadData}
             onManualChange={handleManualChange}
             onAiNoteUpdate={setAiNote}
+            onReset={handleReset}
           />
           
           <OutputDisplay 
@@ -108,26 +115,34 @@ export default function PayloadApp() {
         </div>
 
         {/* Footer / Actions */}
-        <footer className="thick-divider bg-industrial-grey/20 p-4 flex justify-between items-center">
-          <div className="flex gap-4">
+        <footer className="thick-divider bg-industrial-grey/20 p-4 flex justify-between items-center relative">
+          <div className="absolute inset-x-0 top-0 h-px border-t-1 border-gray-600 rugged-line pointer-events-none" />
+          <div className="flex gap-2 md:gap-4">
+            <button 
+              suppressHydrationWarning
+              onClick={handleReset}
+              className="text-[8px] md:text-[9px] font-bold text-gray-500 hover:text-safety-orange transition-colors uppercase tracking-widest"
+            >
+              [RESET]
+            </button>
             <button 
               suppressHydrationWarning
               onClick={() => setIsAuditOpen(true)}
-              className="text-[9px] font-bold text-gray-500 hover:text-white transition-colors uppercase tracking-widest"
+              className="text-[8px] md:text-[9px] font-bold text-gray-500 hover:text-white transition-colors uppercase tracking-widest"
             >
-              [VIEW_LOGS]
+              [LOGS]
             </button>
             <button 
               suppressHydrationWarning
               onClick={() => setAuditEntries([])}
-              className="text-[9px] font-bold text-gray-500 hover:text-white transition-colors uppercase tracking-widest"
+              className="text-[8px] md:text-[9px] font-bold text-gray-500 hover:text-white transition-colors uppercase tracking-widest"
             >
-              [CLEAR_CACHE]
+              [CLEAR]
             </button>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-safety-orange animate-pulse rounded-full" />
-            <span className="text-[9px] font-bold text-safety-orange uppercase tracking-[0.2em]">SYSTEM_READY</span>
+          <div className="flex items-center gap-1.5 shrink-0 ml-2">
+            <div className="w-1.5 h-1.5 bg-safety-orange animate-pulse rounded-full" />
+            <span className="text-[8px] md:text-[9px] font-bold text-safety-orange uppercase tracking-[0.1em] md:tracking-[0.2em] whitespace-nowrap">SYS_READY</span>
           </div>
         </footer>
       </div>

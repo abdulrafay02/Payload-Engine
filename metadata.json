@@ -1,7 +1,5 @@
 {
   "name": "Payload Engine",
   "description": "Omni-Input Pricing Engine for freight load quotes. High-speed, mobile-first PWA with AI-powered data extraction.",
-  "requestFramePermissions": [
-    "camera"
-  ]
+  "requestFramePermissions": []
 }

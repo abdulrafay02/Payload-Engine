@@ -76,13 +76,16 @@ export async function parseLoadImage(base64Image: string): Promise<{ data: LoadD
 export async function getMarketInsight(data: LoadData): Promise<string> {
   const response = await ai.models.generateContent({
     model: "gemini-3-flash-preview",
-    contents: `Provide a brief market insight for this load:
-    Origin: ${data.origin || 'Unknown'}
-    Destination: ${data.destination || 'Unknown'}
-    Miles: ${data.loadedMiles}
-    Weight: ${data.weight} lbs`,
+    contents: `Provide a brief market insight for this load.
+    Parameters:
+    Origin: ${data.origin || 'Not specified'}
+    Destination: ${data.destination || 'Not specified'}
+    Miles: ${data.loadedMiles || 'Unknown'}
+    Weight: ${data.weight || 'Unknown'} lbs
+    
+    If origin or destination are missing, provide insights based on the available data (miles and weight) and general market conditions for sprinter vans.`,
     config: {
-      systemInstruction: "You are a freight market expert. Provide a concise market insight. The insight MUST START with the AI-recommended bid and CPM (e.g., 'AI Recommended Bid: $X,XXX | AI Recommended CPM: $X.XX'), followed by a brief route assessment for the given parameters."
+      systemInstruction: "You are a freight market expert. Provide a concise market insight. The insight MUST START with the AI-recommended bid and CPM (e.g., 'AI Recommended Bid: $X,XXX | AI Recommended CPM: $X.XX'), followed by a brief route assessment for the given parameters. If locations are unknown, provide a general range based on the distance and weight."
     }
   });
 

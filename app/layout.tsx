@@ -22,9 +22,14 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${spaceMono.variable} dark`} suppressHydrationWarning>
       <body suppressHydrationWarning className="antialiased">
+        <svg className="hidden">
+          <filter id="rugged-filter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.5" />
+          </filter>
+        </svg>
         <div className="crt-overlay" />
         <div className="noise" />
-        <div className="scanline" />
         {children}
       </body>
     </html>
