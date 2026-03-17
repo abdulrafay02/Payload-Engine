@@ -18,6 +18,9 @@ const spaceMono = Space_Mono({
 export const metadata: Metadata = {
   title: 'Payload | Omni-Input Pricing Engine',
   description: 'High-speed freight load quoting for Sprinter van operators.',
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
