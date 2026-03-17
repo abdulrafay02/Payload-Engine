@@ -88,11 +88,9 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
         </div>
       )}
       {/* Row 0: Location Inputs */}
-      <div className="grid grid-cols-2 border-b-1 border-gray-600 relative">
-        <div className="absolute inset-x-0 bottom-0 h-px border-b-1 border-gray-600 rugged-line pointer-events-none" />
-        <div className="flex flex-col gap-0.5 bg-industrial-black p-2 border-r-1 border-gray-600 relative">
-          <div className="absolute inset-y-0 right-0 w-px border-r-1 border-gray-600 rugged-line pointer-events-none" />
-          <label className="text-[7px] text-gray-500 font-bold uppercase tracking-widest flex items-center gap-1.5">
+      <div className="grid grid-cols-2 relative">
+        <div className="flex flex-col gap-0.5 bg-industrial-black p-2 relative">
+          <label className="text-[7px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-1.5">
             <Keyboard size={7} className="text-safety-orange" /> Origin
           </label>
           <input
@@ -100,12 +98,13 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
             type="text"
             value={manualData.origin || ''}
             onChange={(e) => onManualChange({ origin: e.target.value })}
-            className="bg-transparent p-0 text-base font-bold focus:text-safety-orange outline-none transition-colors text-white uppercase"
+            className="bg-transparent p-0 text-base font-bold focus:text-safety-orange outline-none transition-colors text-text-main uppercase placeholder:text-text-muted/50"
             placeholder="CITY, ST"
           />
+          <div className="absolute inset-y-0 right-0 w-[2px] bg-border-main rugged-line pointer-events-none" />
         </div>
         <div className="flex flex-col gap-0.5 bg-industrial-black p-2 relative">
-          <label className="text-[7px] text-gray-500 font-bold uppercase tracking-widest flex items-center gap-1.5">
+          <label className="text-[7px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-1.5">
             <Keyboard size={7} className="text-safety-orange" /> Destination
           </label>
           <input
@@ -113,18 +112,17 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
             type="text"
             value={manualData.destination || ''}
             onChange={(e) => onManualChange({ destination: e.target.value })}
-            className="bg-transparent p-0 text-base font-bold focus:text-safety-orange outline-none transition-colors text-white uppercase"
+            className="bg-transparent p-0 text-base font-bold focus:text-safety-orange outline-none transition-colors text-text-main uppercase placeholder:text-text-muted/50"
             placeholder="CITY, ST"
           />
         </div>
+        <div className="absolute inset-x-0 bottom-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
       </div>
 
       {/* Row 1: Manual Inputs */}
-      <div className="grid grid-cols-3 border-b-1 border-gray-600 relative">
-        <div className="absolute inset-x-0 bottom-0 h-px border-b-1 border-gray-600 rugged-line pointer-events-none" />
-        <div className="flex flex-col gap-0.5 bg-industrial-black p-2 border-r-1 border-gray-600 relative">
-          <div className="absolute inset-y-0 right-0 w-px border-r-1 border-gray-600 rugged-line pointer-events-none" />
-          <label className="text-[7px] text-gray-500 font-bold uppercase tracking-widest flex items-center gap-1.5">
+      <div className="grid grid-cols-3 relative">
+        <div className="flex flex-col gap-0.5 bg-industrial-black p-2 relative">
+          <label className="text-[7px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-1.5">
             <Keyboard size={7} className="text-safety-orange" /> Loaded_Miles
           </label>
           <input
@@ -132,13 +130,13 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
             type="number"
             value={manualData.loadedMiles || ''}
             onChange={(e) => onManualChange({ loadedMiles: Number(e.target.value) })}
-            className="bg-transparent p-0 text-xl font-bold focus:text-safety-orange outline-none transition-colors text-white"
+            className="bg-transparent p-0 text-xl font-bold focus:text-safety-orange outline-none transition-colors text-text-main placeholder:text-text-muted/50"
             placeholder="0"
           />
+          <div className="absolute inset-y-0 right-0 w-[2px] bg-border-main rugged-line pointer-events-none" />
         </div>
-        <div className="flex flex-col gap-0.5 bg-industrial-black p-2 border-r-1 border-gray-600 relative">
-          <div className="absolute inset-y-0 right-0 w-px border-r-1 border-gray-600 rugged-line pointer-events-none" />
-          <label className="text-[7px] text-gray-500 font-bold uppercase tracking-widest flex items-center gap-1.5">
+        <div className="flex flex-col gap-0.5 bg-industrial-black p-2 relative">
+          <label className="text-[7px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-1.5">
             <Keyboard size={7} className="text-safety-orange" /> Dead_Miles
           </label>
           <input
@@ -146,12 +144,13 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
             type="number"
             value={manualData.deadheadMiles || ''}
             onChange={(e) => onManualChange({ deadheadMiles: Number(e.target.value) })}
-            className="bg-transparent p-0 text-xl font-bold focus:text-safety-orange outline-none transition-colors text-white"
+            className="bg-transparent p-0 text-xl font-bold focus:text-safety-orange outline-none transition-colors text-text-main placeholder:text-text-muted/50"
             placeholder="0"
           />
+          <div className="absolute inset-y-0 right-0 w-[2px] bg-border-main rugged-line pointer-events-none" />
         </div>
         <div className="flex flex-col gap-0.5 bg-industrial-black p-2 relative">
-          <label className="text-[7px] text-gray-500 font-bold uppercase tracking-widest flex items-center gap-1.5">
+          <label className="text-[7px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-1.5">
             <Keyboard size={7} className="text-safety-orange" /> Load_Weight
           </label>
           <div className="flex items-baseline gap-1.5">
@@ -160,17 +159,17 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
               type="number"
               value={manualData.weight || ''}
               onChange={(e) => onManualChange({ weight: Number(e.target.value) })}
-              className="bg-transparent p-0 text-xl font-bold focus:text-safety-orange outline-none transition-colors text-white w-full"
+              className="bg-transparent p-0 text-xl font-bold focus:text-safety-orange outline-none transition-colors text-text-main w-full placeholder:text-text-muted/50"
               placeholder="0"
             />
-            <span className="text-[8px] font-bold text-gray-600">LBS</span>
+            <span className="text-[8px] font-bold text-text-muted">LBS</span>
           </div>
         </div>
+        <div className="absolute inset-x-0 bottom-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
       </div>
 
       {/* Row 2: AI Ingest & Vision side by side */}
-      <div className="grid grid-cols-1 md:grid-cols-2 relative border-b-1 border-gray-600">
-        <div className="absolute inset-x-0 bottom-0 h-px border-b-1 border-gray-600 rugged-line pointer-events-none" />
+      <div className="grid grid-cols-1 md:grid-cols-2 relative">
         {isProcessing && (
           <div className="absolute inset-0 z-20 bg-black/90 flex flex-col items-center justify-center gap-4">
             <Loader2 className="animate-spin text-safety-orange" size={40} />
@@ -179,16 +178,15 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
         )}
 
         {/* Text Ingest */}
-        <div className="flex flex-col bg-industrial-black border-r-1 border-gray-600 relative">
-          <div className="absolute inset-y-0 right-0 w-px border-r-1 border-gray-600 rugged-line pointer-events-none" />
+        <div className="flex flex-col bg-industrial-black relative">
           <div className="px-2 py-2 flex justify-between items-center relative">
-            <label className="text-[8px] text-gray-400 font-bold uppercase tracking-widest flex items-center gap-2">
+            <label className="text-[8px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-2">
               <FileText size={9} className="text-safety-orange" /> Data_Ingest
             </label>
             <button 
               suppressHydrationWarning
               onClick={() => setShowIngestInfo(!showIngestInfo)}
-              className="text-gray-500 hover:text-safety-orange transition-colors"
+              className="text-text-muted hover:text-safety-orange transition-colors"
             >
               <Info size={10} />
             </button>
@@ -198,9 +196,9 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
             <div className="absolute top-8 left-2 right-2 z-30 bg-industrial-grey border-2 border-safety-orange p-2 shadow-2xl">
               <div className="flex justify-between items-start mb-1">
                 <span className="text-[7px] font-bold text-safety-orange uppercase tracking-widest">Module_Info</span>
-                <button suppressHydrationWarning onClick={() => setShowIngestInfo(false)}><X size={8} className="text-gray-500" /></button>
+                <button suppressHydrationWarning onClick={() => setShowIngestInfo(false)}><X size={8} className="text-text-muted" /></button>
               </div>
-              <p className="text-[9px] text-gray-300 leading-tight uppercase">
+              <p className="text-[9px] text-text-muted leading-tight uppercase">
                 Paste raw text from load boards, emails, or messages. The AI will automatically extract origin, destination, miles, and weight to populate the matrix.
               </p>
             </div>
@@ -211,7 +209,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
               suppressHydrationWarning
               value={pastedText}
               onChange={(e) => setPastedText(e.target.value)}
-              className="w-full h-16 bg-black/40 border-y border-[#444] p-2 text-[10px] font-mono uppercase focus:border-safety-orange outline-none resize-none text-gray-400"
+              className="w-full h-16 bg-black/40 border-y border-border-main p-2 text-[10px] font-mono uppercase focus:border-safety-orange outline-none resize-none text-text-muted placeholder:text-text-muted/30"
               placeholder="[PASTE_PAYLOAD_DATA...]"
             />
             <div>
@@ -219,24 +217,25 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
                 suppressHydrationWarning
                 onClick={handleTextParse}
                 disabled={!pastedText.trim()}
-                className="w-full py-2 bg-industrial-grey border border-[#666] text-white font-bold text-[9px] tracking-[0.2em] uppercase hover:bg-gray-800 disabled:opacity-30 transition-all"
+                className="w-full py-2 bg-industrial-grey border border-border-main text-text-main font-bold text-[9px] tracking-[0.2em] uppercase hover:bg-industrial-black disabled:opacity-30 transition-all"
               >
                 [EXTRACT]
               </button>
             </div>
           </div>
+          <div className="absolute inset-y-0 right-0 w-[2px] bg-border-main rugged-line pointer-events-none hidden md:block" />
         </div>
 
         {/* Vision Uplink */}
         <div className="flex flex-col bg-industrial-black relative">
           <div className="px-2 py-2 flex justify-between items-center relative">
-            <label className="text-[8px] text-gray-400 font-bold uppercase tracking-widest flex items-center gap-2">
+            <label className="text-[8px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-2">
               <Camera size={9} className="text-safety-orange" /> Vision_Uplink
             </label>
             <button 
               suppressHydrationWarning
               onClick={() => setShowVisionInfo(!showVisionInfo)}
-              className="text-gray-500 hover:text-safety-orange transition-colors"
+              className="text-text-muted hover:text-safety-orange transition-colors"
             >
               <Info size={10} />
             </button>
@@ -246,33 +245,35 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
             <div className="absolute top-8 left-2 right-2 z-30 bg-industrial-grey border-2 border-safety-orange p-2 shadow-2xl">
               <div className="flex justify-between items-start mb-1">
                 <span className="text-[7px] font-bold text-safety-orange uppercase tracking-widest">Module_Info</span>
-                <button suppressHydrationWarning onClick={() => setShowVisionInfo(false)}><X size={8} className="text-gray-500" /></button>
+                <button suppressHydrationWarning onClick={() => setShowVisionInfo(false)}><X size={8} className="text-text-muted" /></button>
               </div>
-              <p className="text-[9px] text-gray-300 leading-tight uppercase">
+              <p className="text-[9px] text-text-muted leading-tight uppercase">
                 Upload a screenshot of a load board or rate confirmation. The AI vision system will scan the image and extract all relevant payload parameters automatically.
               </p>
             </div>
           )}
 
           <div className="h-full">
-            <label className="flex flex-col items-center justify-center cursor-pointer group w-full h-full border-y border-dashed border-[#444] hover:border-safety-orange transition-all p-4 bg-black/20">
+            <label className="flex flex-col items-center justify-center cursor-pointer group w-full h-full border-y border-dashed border-border-main hover:border-safety-orange transition-all p-4 bg-black/20">
               <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
               <Camera size={24} className="text-safety-orange mb-1 group-hover:scale-110 transition-transform" />
-              <span className="text-white font-bold text-[8px] tracking-[0.2em] uppercase text-center">[UPLOAD_PAYLOAD_SCREENSHOT]</span>
+              <span className="text-text-main font-bold text-[8px] tracking-[0.2em] uppercase text-center">[UPLOAD_PAYLOAD_SCREENSHOT]</span>
             </label>
           </div>
         </div>
+        <div className="absolute inset-x-0 bottom-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
       </div>
 
       {/* AI Intel Action Bar */}
-      <div className="border-b-2 border-gray-600 bg-industrial-black">
+      <div className="bg-industrial-black relative">
         <button
           suppressHydrationWarning
           onClick={handleGetInsights}
-          className="w-full py-3 flex items-center justify-center gap-2 bg-white text-black font-bold text-[10px] tracking-[0.2em] uppercase hover:bg-safety-orange transition-all active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+          className="w-full py-3 flex items-center justify-center gap-2 bg-text-main text-industrial-black font-bold text-[10px] tracking-[0.2em] uppercase hover:bg-safety-orange transition-all active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
         >
-          <Sparkles size={12} /> [ACTIVATE_AI_MARKET_INTELLIGENCE]
+          <Sparkles size={12} /> [AI_MARKET_INTEL]
         </button>
+        <div className="absolute inset-x-0 bottom-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
       </div>
     </section>
   );

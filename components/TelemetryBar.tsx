@@ -3,17 +3,19 @@
 import React, { useState, useEffect } from 'react';
 import { VEHICLE_LIMITS } from '@/lib/types';
 import Image from 'next/image';
+import { useTheme } from './ThemeProvider';
+import { Sun, Moon } from 'lucide-react';
 
 export default function TelemetryBar() {
   const [isOffline, setIsOffline] = useState(false);
   const [location, setLocation] = useState('DETECTING...');
   const [dateStr, setDateStr] = useState('');
   const [mounted, setMounted] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDateStr(new Date().toISOString().split('T')[0]);
     
     const handleOnline = () => setIsOffline(false);
@@ -46,20 +48,20 @@ export default function TelemetryBar() {
   }, []);
 
   return (
-    <header className="w-full border-b-1 border-gray-600 flex items-stretch bg-industrial-black h-12 overflow-hidden">
+    <header className="w-full border-border-main flex items-stretch bg-industrial-black h-12 overflow-hidden relative">
       {/* Left: Net Status Bar */}
-      <div className={`w-6 border-r-1 border-gray-600 shrink-0 flex items-center justify-center overflow-hidden transition-colors duration-300 ${isOffline ? 'bg-red-600' : 'bg-safety-orange'}`}>
-        <div className="absolute inset-0 border-r-1 border-gray-600 rugged-line pointer-events-none" />
+      <div className={`w-6 shrink-0 flex items-center justify-center overflow-hidden transition-colors duration-300 relative ${isOffline ? 'bg-red-600' : 'bg-safety-orange'}`}>
         <span className="text-[7px] font-black text-black tracking-widest uppercase [writing-mode:vertical-rl] rotate-180">
           {isOffline ? 'OFFLINE' : 'ONLINE'}
         </span>
+        <div className="absolute inset-y-0 right-0 w-[2px] bg-border-main rugged-line pointer-events-none" />
       </div>
 
       {/* Middle: Main Text */}
-      <div className="flex flex-col justify-center px-3 border-r-1 border-gray-600 shrink-0 bg-black/20 relative">
-        <div className="absolute inset-y-0 right-0 w-px border-r-1 border-gray-600 rugged-line pointer-events-none" />
-        <h2 className="text-sm font-black tracking-tighter text-white leading-[0.8]">PAYLOAD</h2>
-        <h2 className="text-sm font-black tracking-tighter text-white leading-[0.8] mt-0.5">ENGINE</h2>
+      <div className="flex flex-col justify-center px-3 shrink-0 bg-black/20 relative">
+        <h2 className="text-sm font-black tracking-tighter text-text-main leading-[0.8]">PAYLOAD</h2>
+        <h2 className="text-sm font-black tracking-tighter text-text-main leading-[0.8] mt-0.5">ENGINE</h2>
+        <div className="absolute inset-y-0 right-0 w-[2px] bg-border-main rugged-line pointer-events-none" />
       </div>
 
       {/* Status Section */}
@@ -71,32 +73,43 @@ export default function TelemetryBar() {
               DATE: {mounted ? dateStr : '----/--/--'}
             </span>
           </div>
-          <span className="text-[7px] font-mono text-safety-orange whitespace-nowrap">
-            [LOC: {mounted ? location : 'DETECTING...'}]
-          </span>
+          <div className="flex items-center gap-4">
+            <span className="text-[7px] font-mono text-safety-orange whitespace-nowrap">
+              [LOC: {mounted ? location : 'DETECTING...'}]
+            </span>
+            <button 
+              suppressHydrationWarning
+              onClick={toggleTheme}
+              className="text-gray-500 hover:text-safety-orange transition-colors"
+              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            >
+              {theme === 'dark' ? <Sun size={10} /> : <Moon size={10} />}
+            </button>
+          </div>
         </div>
 
         {/* Bottom Row: Main Telemetry */}
-        <div className="flex-grow flex items-center px-3 bg-gray-600">
-          <span className="text-[9px] font-mono text-white tracking-[0.05em] uppercase font-black truncate">
+        <div className="flex-grow flex items-center px-3 bg-industrial-grey">
+          <span className="text-[9px] font-mono text-text-main tracking-[0.05em] uppercase font-black truncate">
             [VAN: T-250 // {VEHICLE_LIMITS.MAX_WEIGHT}LB // 132&quot;L x 72&quot;W x 53&quot;H]
           </span>
         </div>
       </div>
 
       {/* Right: Logo */}
-      <div className="w-12 border-l-1 border-gray-600 flex items-center justify-center p-1.5 shrink-0 bg-black/40 relative">
-        <div className="absolute inset-y-0 left-0 w-px border-l-1 border-gray-600 rugged-line pointer-events-none" />
+      <div className="w-12 flex items-center justify-center p-1.5 shrink-0 relative">
         <div className="relative w-7 h-7">
           <Image 
             src="/logo.png" 
             alt="Logo" 
             fill 
-            className="object-contain brightness-125 contrast-125"
+            className={`object-contain ${theme === 'dark' ? 'brightness-125 contrast-125' : 'brightness-75 contrast-125'}`}
             referrerPolicy="no-referrer"
           />
         </div>
+        <div className="absolute inset-y-0 left-0 w-[2px] bg-border-main rugged-line pointer-events-none" />
       </div>
+      <div className="absolute inset-x-0 bottom-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
     </header>
   );
 }

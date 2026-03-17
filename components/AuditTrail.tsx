@@ -37,18 +37,17 @@ export default function AuditTrail({ isOpen, onClose, entries, onStatusChange }:
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-industrial-black border-l-2 border-gray-600 z-[70] flex flex-col shadow-2xl"
+            className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-industrial-black z-[70] flex flex-col shadow-2xl"
           >
-            <div className="absolute inset-y-0 left-0 w-px border-l-2 border-gray-600 rugged-line pointer-events-none" />
-            <div className="p-4 border-b-2 border-gray-600 flex justify-between items-center bg-industrial-grey/20 relative">
-              <div className="absolute inset-x-0 bottom-0 h-px border-b-2 border-gray-600 rugged-line pointer-events-none" />
+            <div className="p-4 flex justify-between items-center bg-industrial-grey/20 relative">
               <div className="flex items-center gap-2">
                 <History className="text-safety-orange" size={18} />
-                <h2 className="text-[10px] font-bold tracking-[0.3em] uppercase text-white">Audit_Log_Stream</h2>
+                <h2 className="text-[10px] font-bold tracking-[0.3em] uppercase text-text-main">Audit_Log_Stream</h2>
               </div>
-              <button suppressHydrationWarning onClick={onClose} className="p-2 hover:bg-white/10 transition-colors text-gray-400 hover:text-white">
+              <button suppressHydrationWarning onClick={onClose} className="p-2 hover:bg-white/10 transition-colors text-text-muted hover:text-text-main">
                 <X size={20} />
               </button>
+              <div className="absolute inset-x-0 bottom-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
             </div>
 
             <div className="flex-grow overflow-y-auto flex flex-col">
@@ -59,33 +58,32 @@ export default function AuditTrail({ isOpen, onClose, entries, onStatusChange }:
                 </div>
               ) : (
                 entries.map((entry, idx) => (
-                  <div key={entry.id} className={`p-4 flex flex-col gap-3 bg-black/20 relative ${idx !== entries.length - 1 ? 'border-b-2 border-gray-600' : ''}`}>
-                    {idx !== entries.length - 1 && <div className="absolute inset-x-0 bottom-0 h-px border-b-2 border-gray-600 rugged-line pointer-events-none" />}
+                  <div key={entry.id} className="p-4 flex flex-col gap-3 bg-black/20 relative">
                     <div className="flex justify-between items-start">
                       <div className="flex flex-col gap-1">
                         <span className="text-xs font-bold text-safety-orange uppercase tracking-tight">
                           {entry.origin || 'LOC_A'} → {entry.destination || 'LOC_B'}
                         </span>
-                        <span className="text-[8px] text-gray-600 font-bold font-mono">
+                        <span className="text-[8px] text-text-muted font-bold font-mono">
                           {new Date(entry.timestamp).toISOString().replace('T', ' ').split('.')[0]}
                         </span>
                       </div>
-                      <span className="text-2xl font-bold tracking-tighter text-white">
+                      <span className="text-2xl font-bold tracking-tighter text-text-main">
                         ${entry.quote.recommendedBid.toLocaleString()}
                       </span>
                     </div>
                     
-                    <div className="grid grid-cols-3 border-t border-[#444] pt-3">
+                    <div className="grid grid-cols-3 border-t border-border-main pt-3">
                       <div className="flex flex-col">
-                        <span className="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Miles</span>
-                        <span className="text-[11px] font-bold text-gray-300">{entry.loadedMiles}</span>
+                        <span className="text-[8px] text-text-muted font-bold uppercase tracking-widest">Miles</span>
+                        <span className="text-[11px] font-bold text-text-muted">{entry.loadedMiles}</span>
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Weight</span>
-                        <span className="text-[11px] font-bold text-gray-300">{entry.weight} LB</span>
+                        <span className="text-[8px] text-text-muted font-bold uppercase tracking-widest">Weight</span>
+                        <span className="text-[11px] font-bold text-text-muted">{entry.weight} LB</span>
                       </div>
                       <div className="flex flex-col items-end">
-                        <span className="text-[8px] text-gray-600 font-bold uppercase tracking-widest">Status</span>
+                        <span className="text-[8px] text-text-muted font-bold uppercase tracking-widest">Status</span>
                         <div className="flex items-center gap-2">
                           {entry.status === 'pending' ? (
                             <div className="flex gap-1">
@@ -114,28 +112,28 @@ export default function AuditTrail({ isOpen, onClose, entries, onStatusChange }:
                         </div>
                       </div>
                     </div>
+                    {idx !== entries.length - 1 && <div className="absolute inset-x-0 bottom-0 h-[2px] bg-border-main rugged-line pointer-events-none" />}
                   </div>
                 ))
               )}
             </div>
 
-            <div className="p-6 border-t-2 border-gray-600 bg-industrial-grey/10 relative">
-              <div className="absolute inset-x-0 top-0 h-px border-t-2 border-gray-600 rugged-line pointer-events-none" />
+            <div className="p-6 bg-industrial-grey/10 relative">
               <div className="flex justify-between items-center">
                 <div className="flex flex-col gap-1">
-                  <span className="text-[8px] text-gray-500 font-bold uppercase tracking-widest">Performance_Index</span>
+                  <span className="text-[8px] text-text-muted font-bold uppercase tracking-widest">Performance_Index</span>
                   <span className="text-2xl font-bold text-terminal-green">{winRate.toFixed(1)}%</span>
                 </div>
                 <div className="flex gap-6">
                   <div className="flex flex-col items-center">
-                    <span className="text-[8px] text-gray-600 font-bold uppercase mb-1">Won</span>
+                    <span className="text-[8px] text-text-muted font-bold uppercase mb-1">Won</span>
                     <div className="flex items-center gap-1 text-terminal-green">
                       <TrendingUp size={14} />
                       <span className="text-sm font-bold">{wonCount.toString().padStart(2, '0')}</span>
                     </div>
                   </div>
                   <div className="flex flex-col items-center">
-                    <span className="text-[8px] text-gray-600 font-bold uppercase mb-1">Lost</span>
+                    <span className="text-[8px] text-text-muted font-bold uppercase mb-1">Lost</span>
                     <div className="flex items-center gap-1 text-red-500">
                       <TrendingDown size={14} />
                       <span className="text-sm font-bold">{lostCount.toString().padStart(2, '0')}</span>
@@ -143,7 +141,9 @@ export default function AuditTrail({ isOpen, onClose, entries, onStatusChange }:
                   </div>
                 </div>
               </div>
+              <div className="absolute inset-x-0 top-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
             </div>
+            <div className="absolute inset-y-0 left-0 w-[2px] bg-border-main rugged-line pointer-events-none" />
           </motion.div>
         </>
       )}

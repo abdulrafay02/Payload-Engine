@@ -32,7 +32,7 @@ The application uses several constants to calculate quotes. These can be adjuste
 Create a `.env.local` file with the following:
 
 ```env
-NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
+LLM_API_KEY=your_gemini_api_key_here
 ```
 
 ## 📦 Installation

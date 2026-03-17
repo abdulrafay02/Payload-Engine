@@ -17,7 +17,7 @@ export default function OutputDisplay({ quote, aiNote, onCommit }: OutputDisplay
   return (
     <section className="flex flex-col">
       {/* Primary Output */}
-      <div className={`p-3 flex items-center justify-between transition-colors ${hasCriticalWarnings ? 'bg-red-600/20' : 'bg-safety-orange'}`}>
+      <div className={`p-3 flex items-center justify-between transition-colors relative ${hasCriticalWarnings ? 'bg-red-600/20' : 'bg-safety-orange'}`}>
         <div className="flex flex-col">
           <span className={`text-[7px] font-bold mb-0.5 tracking-[0.3em] uppercase ${hasCriticalWarnings ? 'text-red-500' : 'text-black opacity-60'}`}>
             {hasCriticalWarnings ? 'VALUATION_CRITICAL_WARNING' : 'VALUATION_RECOMMENDED'}
@@ -35,21 +35,21 @@ export default function OutputDisplay({ quote, aiNote, onCommit }: OutputDisplay
             COMMIT
           </button>
         )}
+        <div className="absolute inset-x-0 bottom-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
       </div>
 
       {/* Warnings & AI Notes */}
       {(quote && (quote.warnings.length > 0 || aiNote)) && (
-        <div className="flex flex-col border-t-2 border-gray-600 relative">
-          <div className="absolute inset-x-0 top-0 h-px border-t-2 border-gray-600 rugged-line pointer-events-none" />
+        <div className="flex flex-col relative">
           {quote.warnings.length > 0 && (
-            <div className="bg-red-950/20 p-2 flex flex-col gap-1 relative border-b-2 border-gray-600">
-              <div className="absolute inset-x-0 bottom-0 h-px border-b-2 border-gray-600 rugged-line pointer-events-none" />
+            <div className="bg-red-950/20 p-2 flex flex-col gap-1 relative">
               <span className="text-[6px] text-red-500 font-bold uppercase tracking-widest mb-1">Alert_Status</span>
               {quote.warnings.map((warning, i) => (
                 <div key={i} className="flex items-center gap-1.5 text-[8px] text-red-500 font-bold uppercase tracking-wider">
                   <AlertTriangle size={8} /> {warning}
                 </div>
               ))}
+              <div className="absolute inset-x-0 bottom-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
             </div>
           )}
 
@@ -64,31 +64,32 @@ export default function OutputDisplay({ quote, aiNote, onCommit }: OutputDisplay
               </div>
             </div>
           )}
+          <div className="absolute inset-x-0 top-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
         </div>
       )}
 
       {/* Stats Breakdown */}
-      <div className="grid grid-cols-2 md:grid-cols-4 border-t-1 border-gray-600 bg-industrial-grey/10 relative">
-        <div className="absolute inset-x-0 top-0 h-px border-t-1 border-gray-600 rugged-line pointer-events-none" />
-        <div className="flex flex-col p-2 border-r-1 border-gray-600 relative">
-          <div className="absolute inset-y-0 right-0 w-px border-r-1 border-gray-600 rugged-line pointer-events-none" />
-          <span className="text-[7px] text-gray-500 font-bold uppercase tracking-widest">Base_Pay</span>
-          <span className="text-sm font-bold text-white">${quote ? quote.basePay.toFixed(2) : '0.00'}</span>
+      <div className="grid grid-cols-2 md:grid-cols-4 bg-industrial-grey/10 relative">
+        <div className="flex flex-col p-2 relative">
+          <span className="text-[7px] text-text-muted font-bold uppercase tracking-widest">Base_Pay</span>
+          <span className="text-sm font-bold text-text-main">${quote ? quote.basePay.toFixed(2) : '0.00'}</span>
+          <div className="absolute inset-y-0 right-0 w-[2px] bg-border-main rugged-line pointer-events-none" />
         </div>
-        <div className="flex flex-col p-2 border-r-1 border-gray-600 relative">
-          <div className="absolute inset-y-0 right-0 w-px border-r-1 border-gray-600 rugged-line pointer-events-none" />
-          <span className="text-[7px] text-gray-500 font-bold uppercase tracking-widest">Fuel_SC</span>
-          <span className="text-sm font-bold text-white">${quote ? quote.fuelSurcharge.toFixed(2) : '0.00'}</span>
+        <div className="flex flex-col p-2 relative">
+          <span className="text-[7px] text-text-muted font-bold uppercase tracking-widest">Fuel_SC</span>
+          <span className="text-sm font-bold text-text-main">${quote ? quote.fuelSurcharge.toFixed(2) : '0.00'}</span>
+          <div className="absolute inset-y-0 right-0 w-[2px] bg-border-main rugged-line pointer-events-none" />
         </div>
-        <div className="flex flex-col p-2 border-r-1 border-gray-600 relative">
-          <div className="absolute inset-y-0 right-0 w-px border-r-1 border-gray-600 rugged-line pointer-events-none" />
-          <span className="text-[7px] text-gray-500 font-bold uppercase tracking-widest">DH_Cost</span>
-          <span className="text-sm font-bold text-white">${quote ? quote.deadheadCost.toFixed(2) : '0.00'}</span>
+        <div className="flex flex-col p-2 relative">
+          <span className="text-[7px] text-text-muted font-bold uppercase tracking-widest">DH_Cost</span>
+          <span className="text-sm font-bold text-text-main">${quote ? quote.deadheadCost.toFixed(2) : '0.00'}</span>
+          <div className="absolute inset-y-0 right-0 w-[2px] bg-border-main rugged-line pointer-events-none" />
         </div>
         <div className="flex flex-col p-2">
           <span className="text-[7px] text-safety-orange font-bold uppercase tracking-widest">Est_CPM</span>
           <span className="text-sm font-bold text-safety-orange">${quote ? quote.cpm.toFixed(2) : '0.00'}</span>
         </div>
+        <div className="absolute inset-x-0 top-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
       </div>
     </section>
   );

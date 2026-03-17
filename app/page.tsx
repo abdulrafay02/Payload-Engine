@@ -93,9 +93,9 @@ export default function PayloadApp() {
   };
 
   return (
-    <main suppressHydrationWarning className="min-h-screen bg-industrial-black flex flex-col items-center justify-center p-4 md:p-8 font-sans selection:bg-safety-orange selection:text-black">
+    <main suppressHydrationWarning className="min-h-screen bg-bg-main flex flex-col items-center justify-center p-4 md:p-8 font-sans selection:bg-safety-orange selection:text-black">
       {/* Main Content Box */}
-      <div className="w-full max-w-xl z-10 flex flex-col border-1 border-gray-600 bg-industrial-black">
+      <div className="w-full max-w-xl z-10 flex flex-col bg-bg-main relative">
         <TelemetryBar />
         
         <div className="flex flex-col">
@@ -115,27 +115,26 @@ export default function PayloadApp() {
         </div>
 
         {/* Footer / Actions */}
-        <footer className="thick-divider bg-industrial-grey/20 p-4 flex justify-between items-center relative">
-          <div className="absolute inset-x-0 top-0 h-px border-t-1 border-gray-600 rugged-line pointer-events-none" />
+        <footer className="bg-industrial-grey/20 p-4 flex justify-between items-center relative">
           <div className="flex gap-2 md:gap-4">
             <button 
               suppressHydrationWarning
               onClick={handleReset}
-              className="text-[8px] md:text-[9px] font-bold text-gray-500 hover:text-safety-orange transition-colors uppercase tracking-widest"
+              className="text-[8px] md:text-[9px] font-bold text-text-muted hover:text-safety-orange transition-colors uppercase tracking-widest"
             >
               [RESET]
             </button>
             <button 
               suppressHydrationWarning
               onClick={() => setIsAuditOpen(true)}
-              className="text-[8px] md:text-[9px] font-bold text-gray-500 hover:text-white transition-colors uppercase tracking-widest"
+              className="text-[8px] md:text-[9px] font-bold text-text-muted hover:text-text-main transition-colors uppercase tracking-widest"
             >
               [LOGS]
             </button>
             <button 
               suppressHydrationWarning
               onClick={() => setAuditEntries([])}
-              className="text-[8px] md:text-[9px] font-bold text-gray-500 hover:text-white transition-colors uppercase tracking-widest"
+              className="text-[8px] md:text-[9px] font-bold text-text-muted hover:text-text-main transition-colors uppercase tracking-widest"
             >
               [CLEAR]
             </button>
@@ -144,7 +143,9 @@ export default function PayloadApp() {
             <div className="w-1.5 h-1.5 bg-safety-orange animate-pulse rounded-full" />
             <span className="text-[8px] md:text-[9px] font-bold text-safety-orange uppercase tracking-[0.1em] md:tracking-[0.2em] whitespace-nowrap">SYS_READY</span>
           </div>
+          <div className="absolute inset-x-0 top-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
         </footer>
+        <div className="absolute inset-0 border-[2px] border-border-main rugged-line pointer-events-none" />
       </div>
 
       <AuditTrail 
