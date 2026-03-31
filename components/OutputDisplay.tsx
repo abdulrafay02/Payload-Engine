@@ -30,7 +30,7 @@ export default function OutputDisplay({ quote, aiNote, onCommit }: OutputDisplay
           <button
             suppressHydrationWarning
             onClick={onCommit}
-            className={`px-4 py-1.5 font-bold text-base border-2 transition-all active:scale-95 ${hasCriticalWarnings ? 'bg-industrial-black text-red-500 border-red-500' : 'bg-industrial-black text-main border-black hover:bg-gray-900'}`}
+            className={`px-4 py-1.5 font-bold text-base border-2 transition-all active:scale-95 ${hasCriticalWarnings ? 'bg-industrial-black text-red-500 border-red-500' : 'bg-industrial-black text-main border-black hover:bg-industrial-grey'}`}
           >
             COMMIT
           </button>
