@@ -87,7 +87,7 @@ export default function PayloadApp() {
   };
 
   const handleStatusChange = (id: string, status: 'won' | 'lost') => {
-    setAuditEntries(prev => prev.map(entry => 
+    setAuditEntries(prev => prev.map(entry =>
       entry.id === id ? { ...entry, status } : entry
     ));
   };
@@ -95,19 +95,19 @@ export default function PayloadApp() {
   return (
     <main suppressHydrationWarning className="min-h-screen bg-bg-main flex flex-col items-center justify-center p-4 md:p-8 font-sans selection:bg-safety-orange selection:text-black">
       {/* Main Content Box */}
-      <div className="w-full max-w-xl z-10 flex flex-col bg-bg-main relative">
+      <div className="w-full max-w-md z-10 flex flex-col bg-bg-main relative">
         <TelemetryBar />
-        
+
         <div className="flex flex-col">
-          <InputMatrix 
+          <InputMatrix
             onDataExtracted={handleDataExtracted}
             manualData={loadData}
             onManualChange={handleManualChange}
             onAiNoteUpdate={setAiNote}
             onReset={handleReset}
           />
-          
-          <OutputDisplay 
+
+          <OutputDisplay
             quote={quote}
             aiNote={aiNote}
             onCommit={handleCommit}
@@ -117,21 +117,21 @@ export default function PayloadApp() {
         {/* Footer / Actions */}
         <footer className="bg-industrial-grey/20 p-4 flex justify-between items-center relative">
           <div className="flex gap-2 md:gap-4">
-            <button 
+            <button
               suppressHydrationWarning
               onClick={handleReset}
               className="text-[8px] md:text-[9px] font-bold text-text-muted hover:text-safety-orange transition-colors uppercase tracking-widest"
             >
               [RESET]
             </button>
-            <button 
+            <button
               suppressHydrationWarning
               onClick={() => setIsAuditOpen(true)}
               className="text-[8px] md:text-[9px] font-bold text-text-muted hover:text-text-main transition-colors uppercase tracking-widest"
             >
               [LOGS]
             </button>
-            <button 
+            <button
               suppressHydrationWarning
               onClick={() => setAuditEntries([])}
               className="text-[8px] md:text-[9px] font-bold text-text-muted hover:text-text-main transition-colors uppercase tracking-widest"
@@ -148,7 +148,7 @@ export default function PayloadApp() {
         <div className="absolute inset-0 border-[2px] border-border-main rugged-line pointer-events-none" />
       </div>
 
-      <AuditTrail 
+      <AuditTrail
         isOpen={isAuditOpen}
         onClose={() => setIsAuditOpen(false)}
         entries={auditEntries}

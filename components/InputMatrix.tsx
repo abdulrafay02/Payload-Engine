@@ -183,7 +183,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
             <label className="text-[8px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-2">
               <FileText size={9} className="text-safety-orange" /> Data_Ingest
             </label>
-            <button 
+            <button
               suppressHydrationWarning
               onClick={() => setShowIngestInfo(!showIngestInfo)}
               className="text-text-muted hover:text-safety-orange transition-colors"
@@ -209,7 +209,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
               suppressHydrationWarning
               value={pastedText}
               onChange={(e) => setPastedText(e.target.value)}
-              className="w-full h-16 bg-black/40 border-y border-border-main p-2 text-[10px] font-mono uppercase focus:border-safety-orange outline-none resize-none text-text-muted placeholder:text-text-muted/30"
+              className="w-full h-16 bg-black/10 border-y border-border-main p-2 text-[10px] font-mono uppercase focus:border-safety-orange outline-none resize-none text-text-muted placeholder:text-text-muted/95"
               placeholder="[PASTE_PAYLOAD_DATA...]"
             />
             <div>
@@ -232,7 +232,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
             <label className="text-[8px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-2">
               <Camera size={9} className="text-safety-orange" /> Vision_Uplink
             </label>
-            <button 
+            <button
               suppressHydrationWarning
               onClick={() => setShowVisionInfo(!showVisionInfo)}
               className="text-text-muted hover:text-safety-orange transition-colors"
@@ -269,7 +269,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
         <button
           suppressHydrationWarning
           onClick={handleGetInsights}
-          className="w-full py-3 flex items-center justify-center gap-2 bg-text-main text-industrial-black font-bold text-[10px] tracking-[0.2em] uppercase hover:bg-safety-orange transition-all active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+          className="w-full py-3 flex items-center justify-center gap-2 bg-industrial-grey text-text-main font-bold text-[10px] tracking-[0.2em] uppercase hover:bg-safety-orange hover:text-white transition-all active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
         >
           <Sparkles size={12} /> [AI_MARKET_INTEL]
         </button>
