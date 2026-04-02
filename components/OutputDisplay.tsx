@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { QuoteResult } from '@/lib/types';
 import { AlertTriangle } from 'lucide-react';
 
@@ -12,7 +12,55 @@ interface OutputDisplayProps {
 
 export default function OutputDisplay({ quote, aiNote, onCommit }: OutputDisplayProps) {
   const hasCriticalWarnings = quote?.isOverweight || quote?.isOverSize;
-  const displayBid = quote ? quote.recommendedBid : 0;
+
+  const [animatedBid, setAnimatedBid] = useState(0);
+
+  useEffect(() => {
+    if (!quote) {
+      setAnimatedBid(0);
+      return;
+    }
+    const targetBid = quote.recommendedBid;
+    let startTime: number;
+    const duration = 800; // roll duration
+
+    // start from a lower baseline for dramatic effect
+    const baseline = targetBid * 0.3;
+
+    const animate = (time: number) => {
+      if (!startTime) startTime = time;
+      const progress = Math.min((time - startTime) / duration, 1);
+      // easeOutExpo
+      const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+
+      setAnimatedBid(baseline + ((targetBid - baseline) * easeProgress));
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, [quote]);
+
+  const [displayedAiNote, setDisplayedAiNote] = useState('');
+
+  useEffect(() => {
+    if (!aiNote) {
+      setDisplayedAiNote('');
+      return;
+    }
+
+    setDisplayedAiNote('');
+    let i = 0;
+    const interval = setInterval(() => {
+      setDisplayedAiNote(aiNote.substring(0, i + 1));
+      i++;
+      if (i >= aiNote.length) clearInterval(interval);
+    }, 20);
+
+    return () => clearInterval(interval);
+  }, [aiNote]);
 
   return (
     <section className="flex flex-col">
@@ -22,8 +70,8 @@ export default function OutputDisplay({ quote, aiNote, onCommit }: OutputDisplay
           <span className={`text-[7px] font-bold mb-0.5 tracking-[0.3em] uppercase ${hasCriticalWarnings ? 'text-red-500' : 'text-industrial-black opacity-60'}`}>
             {hasCriticalWarnings ? 'VALUATION_CRITICAL_WARNING' : 'VALUATION_RECOMMENDED'}
           </span>
-          <h1 className={`text-2xl md:text-4xl font-bold tracking-tighter ${hasCriticalWarnings ? 'text-red-500' : 'text-industrial-black'}`}>
-            BID: ${displayBid.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+          <h1 className={`text-2xl md:text-4xl font-bold tracking-tighter ${hasCriticalWarnings ? 'text-red-500 [text-shadow:_0_0_12px_currentColor]' : 'text-industrial-black'}`}>
+            BID: ${animatedBid.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </h1>
         </div>
         {quote && (
@@ -57,9 +105,10 @@ export default function OutputDisplay({ quote, aiNote, onCommit }: OutputDisplay
             <div className="bg-safety-orange/5 p-2 flex flex-col gap-1">
               <span className="text-[6px] text-safety-orange font-bold uppercase tracking-widest mb-1">AI_Intelligence</span>
               <div className="flex items-start gap-2">
-                <div className="bg-safety-orange text-black font-bold text-[6px] px-1 py-0.5 tracking-widest">LOG</div>
-                <p className="text-md text-safety-orange leading-tight font-bold uppercase tracking-tight opacity-80">
-                  {aiNote}
+                <div className="bg-safety-orange text-black font-bold text-[6px] px-1 py-0.5 tracking-widest mt-0.5 shadow-[0_0_4px_#ff6600]">LOG</div>
+                <p className="text-md text-safety-orange leading-tight font-bold uppercase tracking-tight opacity-80 flex-1 min-h-[2.5rem]">
+                  {displayedAiNote}
+                  {aiNote && displayedAiNote.length < aiNote.length && <span className="inline-block w-2 h-3 bg-safety-orange animate-pulse ml-0.5 align-middle" />}
                 </p>
               </div>
             </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { LoadData } from '@/lib/types';
+import { LoadData, VEHICLE_LIMITS } from '@/lib/types';
 import { parseLoadText, parseLoadImage, getMarketInsight } from '@/lib/aiService';
 import { Camera, FileText, Keyboard, Loader2, Sparkles, Info, X, RotateCcw } from 'lucide-react';
 
@@ -19,6 +19,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
   const [error, setError] = useState<string | null>(null);
   const [showIngestInfo, setShowIngestInfo] = useState(false);
   const [showVisionInfo, setShowVisionInfo] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleGetInsights = async () => {
     setIsProcessing(true);
@@ -50,10 +51,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
     }
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const processImageFile = async (file: File) => {
     setIsProcessing(true);
     setError(null);
     try {
@@ -78,6 +76,32 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
     }
   };
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) processImageFile(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      processImageFile(file);
+    } else if (file) {
+      setError('INVALID FILE TYPE: VISION REQUIRES IMAGE DATA');
+    }
+  };
+
   return (
     <section className="flex flex-col relative">
       {/* Error Banner */}
@@ -91,7 +115,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
       <div className="grid grid-cols-2 relative">
         <div className="flex flex-col gap-0.5 bg-industrial-black p-2 relative">
           <label className="text-[7px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-1.5">
-            <Keyboard size={7} className="text-safety-orange" /> Origin
+            <Keyboard size={7} className="text-safety-orange drop-shadow-[0_0_4px_#ff6600]" /> Origin
           </label>
           <input
             suppressHydrationWarning
@@ -105,7 +129,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
         </div>
         <div className="flex flex-col gap-0.5 bg-industrial-black p-2 relative">
           <label className="text-[7px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-1.5">
-            <Keyboard size={7} className="text-safety-orange" /> Destination
+            <Keyboard size={7} className="text-safety-orange drop-shadow-[0_0_4px_#ff6600]" /> Destination
           </label>
           <input
             suppressHydrationWarning
@@ -123,7 +147,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
       <div className="grid grid-cols-3 relative">
         <div className="flex flex-col gap-0.5 bg-industrial-black p-2 relative">
           <label className="text-[7px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-1.5">
-            <Keyboard size={7} className="text-safety-orange" /> Loaded_Miles
+            <Keyboard size={7} className="text-safety-orange drop-shadow-[0_0_4px_#ff6600]" /> Loaded_Miles
           </label>
           <input
             suppressHydrationWarning
@@ -137,7 +161,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
         </div>
         <div className="flex flex-col gap-0.5 bg-industrial-black p-2 relative">
           <label className="text-[7px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-1.5">
-            <Keyboard size={7} className="text-safety-orange" /> Dead_Miles
+            <Keyboard size={7} className="text-safety-orange drop-shadow-[0_0_4px_#ff6600]" /> Dead_Miles
           </label>
           <input
             suppressHydrationWarning
@@ -150,8 +174,9 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
           <div className="absolute inset-y-0 right-0 w-[2px] bg-border-main rugged-line pointer-events-none" />
         </div>
         <div className="flex flex-col gap-0.5 bg-industrial-black p-2 relative">
-          <label className="text-[7px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-1.5">
-            <Keyboard size={7} className="text-safety-orange" /> Load_Weight
+          <label className="text-[7px] font-bold uppercase tracking-widest flex items-center justify-between">
+            <span className="flex items-center gap-1.5 text-text-muted"><Keyboard size={7} className="text-safety-orange drop-shadow-[0_0_4px_#ff6600]" /> Load_Weight</span>
+            {manualData.weight > VEHICLE_LIMITS.MAX_WEIGHT && <span className="text-[6px] text-red-500 animate-pulse bg-red-950/40 px-1 py-0.5">OVERWEIGHT</span>}
           </label>
           <div className="flex items-baseline gap-1.5">
             <input
@@ -159,7 +184,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
               type="number"
               value={manualData.weight || ''}
               onChange={(e) => onManualChange({ weight: Number(e.target.value) })}
-              className="bg-transparent p-0 text-xl font-bold focus:text-safety-orange outline-none transition-colors text-text-main w-full placeholder:text-text-muted/50"
+              className={`bg-transparent p-0 text-xl font-bold focus:text-safety-orange outline-none transition-colors w-full placeholder:text-text-muted/50 ${manualData.weight > VEHICLE_LIMITS.MAX_WEIGHT ? 'text-red-500' : 'text-text-main'}`}
               placeholder="0"
             />
             <span className="text-[8px] font-bold text-text-muted">LBS</span>
@@ -172,8 +197,8 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
       <div className="grid grid-cols-1 md:grid-cols-2 relative">
         {isProcessing && (
           <div className="absolute inset-0 z-20 bg-black/90 flex flex-col items-center justify-center gap-4">
-            <Loader2 className="animate-spin text-safety-orange" size={40} />
-            <span className="text-[10px] font-bold text-safety-orange animate-pulse uppercase tracking-[0.3em]">ANALYZING_PAYLOAD...</span>
+            <Loader2 className="animate-spin text-safety-orange drop-shadow-[0_0_6px_#ff6600]" size={40} />
+            <span className="text-[10px] font-bold text-safety-orange animate-pulse uppercase tracking-[0.3em] [text-shadow:_0_0_8px_currentColor]">ANALYZING_PAYLOAD...</span>
           </div>
         )}
 
@@ -181,7 +206,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
         <div className="flex flex-col bg-industrial-black relative">
           <div className="px-2 py-2 flex justify-between items-center relative">
             <label className="text-[8px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-2">
-              <FileText size={9} className="text-safety-orange" /> Data_Ingest
+              <FileText size={9} className="text-safety-orange drop-shadow-[0_0_4px_#ff6600]" /> Data_Ingest
             </label>
             <button
               suppressHydrationWarning
@@ -195,7 +220,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
           {showIngestInfo && (
             <div className="absolute top-8 left-2 right-2 z-30 bg-industrial-grey border-2 border-safety-orange p-2 shadow-2xl">
               <div className="flex justify-between items-start mb-1">
-                <span className="text-[7px] font-bold text-safety-orange uppercase tracking-widest">Module_Info</span>
+                <span className="text-[7px] font-bold text-safety-orange uppercase tracking-widest [text-shadow:_0_0_8px_currentColor]">Module_Info</span>
                 <button suppressHydrationWarning onClick={() => setShowIngestInfo(false)}><X size={8} className="text-text-muted" /></button>
               </div>
               <p className="text-[9px] text-text-muted leading-tight uppercase">
@@ -230,7 +255,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
         <div className="flex flex-col bg-industrial-black relative">
           <div className="px-2 py-2 flex justify-between items-center relative">
             <label className="text-[8px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-2">
-              <Camera size={9} className="text-safety-orange" /> Vision_Uplink
+              <Camera size={9} className="text-safety-orange drop-shadow-[0_0_4px_#ff6600]" /> Vision_Uplink
             </label>
             <button
               suppressHydrationWarning
@@ -244,7 +269,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
           {showVisionInfo && (
             <div className="absolute top-8 left-2 right-2 z-30 bg-industrial-grey border-2 border-safety-orange p-2 shadow-2xl">
               <div className="flex justify-between items-start mb-1">
-                <span className="text-[7px] font-bold text-safety-orange uppercase tracking-widest">Module_Info</span>
+                <span className="text-[7px] font-bold text-safety-orange uppercase tracking-widest [text-shadow:_0_0_8px_currentColor]">Module_Info</span>
                 <button suppressHydrationWarning onClick={() => setShowVisionInfo(false)}><X size={8} className="text-text-muted" /></button>
               </div>
               <p className="text-[9px] text-text-muted leading-tight uppercase">
@@ -253,11 +278,18 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
             </div>
           )}
 
-          <div className="h-full">
-            <label className="flex flex-col items-center justify-center cursor-pointer group w-full h-full border-y border-dashed border-border-main hover:border-safety-orange transition-all p-4 bg-black/20">
+          <div 
+            className="h-full relative"
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            <label className={`flex flex-col items-center justify-center cursor-pointer group w-full h-full border-y border-dashed transition-all p-4 ${isDragging ? 'bg-safety-orange/10 border-safety-orange' : 'bg-black/20 border-border-main hover:border-safety-orange'}`}>
               <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
-              <Camera size={24} className="text-safety-orange mb-1 group-hover:scale-110 transition-transform" />
-              <span className="text-text-main font-bold text-[8px] tracking-[0.2em] uppercase text-center">[UPLOAD_PAYLOAD_SCREENSHOT]</span>
+              <Camera size={24} className={`mb-1 transition-transform ${isDragging ? 'text-safety-orange scale-110 animate-pulse' : 'text-safety-orange group-hover:scale-110'}`} />
+              <div className="text-text-main font-bold text-[8px] tracking-[0.2em] uppercase text-center leading-tight mt-1">
+                {isDragging ? '>> DROP_PAYLOAD_DATA <<' : '[UPLOAD_OR_DROP_SCREENSHOT]'}
+              </div>
             </label>
           </div>
         </div>

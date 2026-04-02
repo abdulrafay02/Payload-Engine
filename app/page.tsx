@@ -7,7 +7,7 @@ import OutputDisplay from '@/components/OutputDisplay';
 import AuditTrail from '@/components/AuditTrail';
 import { LoadData, QuoteResult, AuditEntry } from '@/lib/types';
 import { calculateQuote } from '@/lib/pricingEngine';
-import { History, Save } from 'lucide-react';
+import { History, Save, Terminal } from 'lucide-react';
 
 export default function PayloadApp() {
   const [loadData, setLoadData] = useState<LoadData>({
@@ -95,7 +95,7 @@ export default function PayloadApp() {
   return (
     <main suppressHydrationWarning className="min-h-screen bg-bg-main flex flex-col items-center justify-center p-4 md:p-8 font-sans selection:bg-safety-orange selection:text-black">
       {/* Main Content Box */}
-      <div className="w-full max-w-md z-10 flex flex-col bg-bg-main relative">
+      <div className="w-full max-w-md z-10 flex flex-col bg-bg-main relative shadow-2xl">
         <TelemetryBar />
 
         <div className="flex flex-col">
@@ -139,9 +139,9 @@ export default function PayloadApp() {
               [CLEAR]
             </button>
           </div>
-          <div className="flex items-center gap-1.5 shrink-0 ml-2">
-            <div className="w-1.5 h-1.5 bg-safety-orange animate-pulse rounded-full" />
-            <span className="text-[8px] md:text-[9px] font-bold text-safety-orange uppercase tracking-[0.1em] md:tracking-[0.2em] whitespace-nowrap">SYS_READY</span>
+          <div className="flex items-center gap-1.5 shrink-0 ml-2 drop-shadow-[0_0_4px_#ff6600]">
+            <div className="w-1.5 h-1.5 bg-safety-orange animate-pulse rounded-full shadow-[0_0_8px_#ff6600]" />
+            <span className="text-[8px] md:text-[9px] font-bold text-safety-orange uppercase tracking-[0.1em] md:tracking-[0.2em] whitespace-nowrap [text-shadow:_0_0_8px_currentColor]">SYS_READY</span>
           </div>
           <div className="absolute inset-x-0 top-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
         </footer>
