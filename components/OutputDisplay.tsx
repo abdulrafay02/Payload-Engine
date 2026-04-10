@@ -122,12 +122,14 @@ export default function OutputDisplay({ quote, aiNote, onCommit }: OutputDisplay
         <div className="flex flex-col p-2 relative">
           <span className="text-[7px] text-safety-orange font-bold uppercase tracking-widest">Est_CPM</span>
           <span className="text-sm font-bold text-safety-orange">${quote ? quote.cpm.toFixed(2) : '0.00'}</span>
+          <div className="absolute inset-x-0 bottom-0 h-[2px] bg-border-main rugged-line pointer-events-none md:hidden" />
           <div className="absolute inset-y-0 right-0 w-[2px] bg-border-main rugged-line pointer-events-none" />
         </div>
         <div className="flex flex-col p-2 relative">
           <span className="text-[7px] text-text-muted font-bold uppercase tracking-widest">Base_Pay</span>
           <span className="text-sm font-bold text-text-main">${quote ? quote.basePay.toFixed(2) : '0.00'}</span>
-          <div className="absolute inset-y-0 right-0 w-[2px] bg-border-main rugged-line pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-[2px] bg-border-main rugged-line pointer-events-none md:hidden" />
+          <div className="absolute inset-y-0 right-0 w-[2px] bg-border-main rugged-line pointer-events-none hidden md:block" />
         </div>
         <div className="flex flex-col p-2 relative">
           <span className="text-[7px] text-text-muted font-bold uppercase tracking-widest">Fuel_SC</span>

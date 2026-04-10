@@ -1,28 +1,28 @@
-import { LoadData, QuoteResult, VEHICLE_LIMITS, PRICING_CONSTANTS } from './types';
+import { LoadData, QuoteResult, VehicleConfig, PRICING_CONSTANTS } from './types';
 
-export function calculateQuote(data: LoadData): QuoteResult {
+export function calculateQuote(data: LoadData, vehicle: VehicleConfig): QuoteResult {
   const { loadedMiles, deadheadMiles, weight, dimensions } = data;
   const warnings: string[] = [];
 
   // Check limits
-  const isOverweight = weight > VEHICLE_LIMITS.MAX_WEIGHT;
+  const isOverweight = weight > vehicle.maxWeight;
   if (isOverweight) {
-    warnings.push(`OVERWEIGHT: ${weight}lbs exceeds ${VEHICLE_LIMITS.MAX_WEIGHT}lbs limit`);
+    warnings.push(`OVERWEIGHT: ${weight}lbs exceeds ${vehicle.maxWeight}lbs limit`);
   }
 
   let isOverSize = false;
   if (dimensions) {
-    if (dimensions.length > VEHICLE_LIMITS.MAX_LENGTH) {
+    if (dimensions.length > vehicle.maxLength) {
       isOverSize = true;
-      warnings.push(`OVERLENGTH: ${dimensions.length}" exceeds ${VEHICLE_LIMITS.MAX_LENGTH}" limit`);
+      warnings.push(`OVERLENGTH: ${dimensions.length}" exceeds ${vehicle.maxLength}" limit`);
     }
-    if (dimensions.width > VEHICLE_LIMITS.MAX_WIDTH) {
+    if (dimensions.width > vehicle.maxWidth) {
       isOverSize = true;
-      warnings.push(`OVERWIDTH: ${dimensions.width}" exceeds ${VEHICLE_LIMITS.MAX_WIDTH}" limit`);
+      warnings.push(`OVERWIDTH: ${dimensions.width}" exceeds ${vehicle.maxWidth}" limit`);
     }
-    if (dimensions.height > VEHICLE_LIMITS.MAX_HEIGHT) {
+    if (dimensions.height > vehicle.maxHeight) {
       isOverSize = true;
-      warnings.push(`OVERHEIGHT: ${dimensions.height}" exceeds ${VEHICLE_LIMITS.MAX_HEIGHT}" limit`);
+      warnings.push(`OVERHEIGHT: ${dimensions.height}" exceeds ${vehicle.maxHeight}" limit`);
     }
   }
 

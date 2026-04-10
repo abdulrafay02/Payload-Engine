@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { LoadData, VEHICLE_LIMITS } from '@/lib/types';
+import { LoadData, VehicleConfig } from '@/lib/types';
 import { parseLoadText, parseLoadImage, getMarketInsight } from '@/lib/aiService';
-import { Camera, FileText, Keyboard, Loader2, Sparkles, Info, X, RotateCcw } from 'lucide-react';
+import { Camera, FileText, Keyboard, Loader2, Sparkles, Info, X } from 'lucide-react';
 
 interface InputMatrixProps {
   onDataExtracted: (data: LoadData, aiNote: string) => void;
@@ -11,9 +11,10 @@ interface InputMatrixProps {
   onManualChange: (data: Partial<LoadData>) => void;
   onAiNoteUpdate: (note: string) => void;
   onReset: () => void;
+  vehicle: VehicleConfig;
 }
 
-export default function InputMatrix({ onDataExtracted, manualData, onManualChange, onAiNoteUpdate, onReset }: InputMatrixProps) {
+export default function InputMatrix({ onDataExtracted, manualData, onManualChange, onAiNoteUpdate, onReset, vehicle }: InputMatrixProps) {
   const [pastedText, setPastedText] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +26,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
     setIsProcessing(true);
     setError(null);
     try {
-      const insight = await getMarketInsight(manualData);
+      const insight = await getMarketInsight(manualData, vehicle);
       onAiNoteUpdate(insight);
     } catch (err) {
       console.error('Insight error:', err);
@@ -40,7 +41,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
     setIsProcessing(true);
     setError(null);
     try {
-      const result = await parseLoadText(pastedText);
+      const result = await parseLoadText(pastedText, vehicle);
       onDataExtracted(result.data, result.aiNote);
       setPastedText('');
     } catch (err) {
@@ -59,7 +60,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
       reader.onloadend = async () => {
         try {
           const base64 = reader.result as string;
-          const result = await parseLoadImage(base64);
+          const result = await parseLoadImage(base64, vehicle);
           onDataExtracted(result.data, result.aiNote);
         } catch (err) {
           console.error('Image parse error:', err);
@@ -176,7 +177,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
         <div className="flex flex-col gap-0.5 bg-industrial-black p-2 relative">
           <label className="text-[7px] font-bold uppercase tracking-widest flex items-center justify-between">
             <span className="flex items-center gap-1.5 text-text-muted"><Keyboard size={7} className="text-safety-orange drop-shadow-[0_0_4px_#ff6600]" /> Load_Weight</span>
-            {manualData.weight > VEHICLE_LIMITS.MAX_WEIGHT && <span className="text-[6px] text-red-500 animate-pulse bg-red-950/40 px-1 py-0.5">OVERWEIGHT</span>}
+            {manualData.weight > vehicle.maxWeight && <span className="text-[6px] text-red-500 animate-pulse bg-red-950/40 px-1 py-0.5">OVERWEIGHT</span>}
           </label>
           <div className="flex items-baseline gap-1.5">
             <input
@@ -184,7 +185,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
               type="number"
               value={manualData.weight || ''}
               onChange={(e) => onManualChange({ weight: Number(e.target.value) })}
-              className={`bg-transparent p-0 text-xl font-bold focus:text-safety-orange outline-none transition-colors w-full placeholder:text-text-muted/50 ${manualData.weight > VEHICLE_LIMITS.MAX_WEIGHT ? 'text-red-500' : 'text-text-main'}`}
+              className={`bg-transparent p-0 text-xl font-bold focus:text-safety-orange outline-none transition-colors w-full placeholder:text-text-muted/50 ${manualData.weight > vehicle.maxWeight ? 'text-red-500' : 'text-text-main'}`}
               placeholder="0"
             />
             <span className="text-[8px] font-bold text-text-muted">LBS</span>

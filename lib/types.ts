@@ -31,11 +31,20 @@ export interface AuditEntry extends LoadData {
   status: 'pending' | 'won' | 'lost';
 }
 
-export const VEHICLE_LIMITS = {
-  MAX_WEIGHT: 3200,
-  MAX_LENGTH: 132,
-  MAX_WIDTH: 53,
-  MAX_HEIGHT: 72,
+export interface VehicleConfig {
+  name: string;
+  maxWeight: number;
+  maxLength: number;
+  maxWidth: number;
+  maxHeight: number;
+}
+
+export const DEFAULT_VEHICLE: VehicleConfig = {
+  name: 'T-250',
+  maxWeight: 3200,
+  maxLength: 132,
+  maxWidth: 53,
+  maxHeight: 72,
 };
 
 export const PRICING_CONSTANTS = {

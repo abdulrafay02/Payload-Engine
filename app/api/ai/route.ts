@@ -36,13 +36,16 @@ export async function POST(req: Request) {
     }
 
     if (action === "parseText") {
+      const { vehicle } = payload;
+      const vehicleContext = vehicle ? `The load will be hauled by a ${vehicle.name} with limits: Max Weight ${vehicle.maxWeight}lbs, Dimensions (LxWxH): ${vehicle.maxLength}" x ${vehicle.maxWidth}" x ${vehicle.maxHeight}". Take these capabilities into account.` : `The load will be hauled by a sprinter van.`;
+
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: `Extract load details from this text: "${payload.text}"`,
+        contents: `Extract load details from this text: "${payload.text}". ${vehicleContext}`,
         config: {
           responseMimeType: "application/json",
           responseSchema: LOAD_SCHEMA,
-          systemInstruction: "You are a freight dispatcher assistant. Extract load details accurately. Always provide a 'marketContext' note. The note MUST START with the AI-recommended bid and CPM (e.g., 'AI Recommended Bid: $X,XXX | AI Recommended CPM: $X.XX'), followed by a brief route assessment."
+          systemInstruction: "You are a freight dispatcher assistant. Extract load details accurately. Always provide a 'marketContext' note. The note MUST START with the AI-recommended bid and CPM (e.g., 'AI Recommended Bid: $X,XXX | AI Recommended CPM: $X.XX'), followed by a brief route assessment based on the vehicle specs provided."
         }
       });
 
@@ -52,10 +55,13 @@ export async function POST(req: Request) {
     }
 
     if (action === "parseImage") {
+      const { vehicle } = payload;
+      const vehicleContext = vehicle ? `The load will be hauled by a ${vehicle.name} with limits: Max Weight ${vehicle.maxWeight}lbs, Dimensions (LxWxH): ${vehicle.maxLength}" x ${vehicle.maxWidth}" x ${vehicle.maxHeight}". Take these capabilities into account.` : `The load will be hauled by a sprinter van.`;
+
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: [
-          { text: "Extract load details from this screenshot of a load board." },
+          { text: `Extract load details from this screenshot of a load board. ${vehicleContext}` },
           {
             inlineData: {
               mimeType: "image/png",
@@ -66,7 +72,7 @@ export async function POST(req: Request) {
         config: {
           responseMimeType: "application/json",
           responseSchema: LOAD_SCHEMA,
-          systemInstruction: "You are a freight dispatcher assistant. Extract load details from images accurately. Always provide a 'marketContext' note that includes a brief route assessment AND a specific AI-recommended bid amount (e.g., 'AI Recommended Bid: $X,XXX')."
+          systemInstruction: "You are a freight dispatcher assistant. Extract load details from images accurately. Always provide a 'marketContext' note that includes a brief route assessment AND a specific AI-recommended bid amount based on the provided vehicle (e.g., 'AI Recommended Bid: $X,XXX')."
         }
       });
 
@@ -76,19 +82,20 @@ export async function POST(req: Request) {
     }
 
     if (action === "getInsight") {
-      const { data } = payload;
+      const { data, vehicle } = payload;
+      const vehicleContext = vehicle ? `${vehicle.name} (Max Wt: ${vehicle.maxWeight}lbs, Max Dims: ${vehicle.maxLength}"x${vehicle.maxWidth}"x${vehicle.maxHeight}")` : `sprinter van`;
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
-        contents: `Provide a brief market insight for this load.
+        contents: `Provide a brief market insight for this load given the chosen vehicle: ${vehicleContext}
         Parameters:
         Origin: ${data.origin || 'Not specified'}
         Destination: ${data.destination || 'Not specified'}
         Miles: ${data.loadedMiles || 'Unknown'}
         Weight: ${data.weight || 'Unknown'} lbs
         
-        If origin or destination are missing, provide insights based on the available data (miles and weight) and general market conditions for sprinter vans.`,
+        If origin or destination are missing, provide insights based on the available data (miles and weight) and general market conditions for the specified vehicle.`,
         config: {
-          systemInstruction: "You are a freight market expert. Provide a concise market insight. The insight MUST START with the AI-recommended bid and CPM (e.g., 'AI Recommended Bid: $X,XXX | AI Recommended CPM: $X.XX'), followed by a brief route assessment for the given parameters. If locations are unknown, provide a general range based on the distance and weight."
+          systemInstruction: "You are a freight market expert. Provide a concise market insight. The insight MUST START with the AI-recommended bid and CPM (e.g., 'AI Recommended Bid: $X,XXX | AI Recommended CPM: $X.XX'), followed by a brief route assessment for the given parameters and vehicle. If locations are unknown, provide a general range based on the distance, weight, and vehicle capacity."
         }
       });
 

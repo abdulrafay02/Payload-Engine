@@ -1,12 +1,17 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { VEHICLE_LIMITS } from '@/lib/types';
+import { VehicleConfig } from '@/lib/types';
 import Image from 'next/image';
 import { useTheme } from './ThemeProvider';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, Settings } from 'lucide-react';
 
-export default function TelemetryBar() {
+interface TelemetryBarProps {
+  vehicle: VehicleConfig;
+  onConfigClick: () => void;
+}
+
+export default function TelemetryBar({ vehicle, onConfigClick }: TelemetryBarProps) {
   const [isOffline, setIsOffline] = useState(false);
   const [location, setLocation] = useState('DETECTING...');
   const [dateStr, setDateStr] = useState('');
@@ -89,10 +94,11 @@ export default function TelemetryBar() {
         </div>
 
         {/* Bottom Row: Main Telemetry */}
-        <div className="flex-grow flex items-center px-3 bg-industrial-grey">
-          <span className="text-[9px] font-mono text-text-main tracking-[0.05em] uppercase font-black truncate">
-            [VAN: T-250 // {VEHICLE_LIMITS.MAX_WEIGHT}LB // 132&quot;L x 72&quot;W x 53&quot;H]
+        <div className="flex-grow flex items-center px-3 bg-industrial-grey justify-between group cursor-pointer hover:bg-industrial-black transition-colors" onClick={onConfigClick}>
+          <span className="text-[9px] font-mono text-text-main tracking-[0.05em] uppercase font-black truncate group-hover:text-safety-orange transition-colors">
+            {`[${vehicle.name} // ${vehicle.maxWeight}LB // ${vehicle.maxLength}"L x ${vehicle.maxWidth}"W x ${vehicle.maxHeight}"H]`}
           </span>
+          <Settings size={10} className="text-text-muted group-hover:text-safety-orange transition-colors" />
         </div>
       </div>
 

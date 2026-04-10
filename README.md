@@ -11,6 +11,7 @@ Payload Engine is a high-speed, industrial-grade pricing engine designed for Spr
 - **Deterministic Pricing Engine**: Calculates recommended bids, CPM (Cost Per Mile), fuel surcharges, and profit margins.
 - **Audit Trail**: Maintains a local history of all quotes and their outcomes (Won/Lost).
 - **Industrial UI**: A high-contrast, brutalist-inspired interface optimized for high-speed data entry and readability.
+- **Custom Vehicle Configuration**: Change vehicle limits (weight and dimensions) dynamically through the UI to instantly recalculate quoting capacities and tailor AI intelligence.
 - **AI Market Intelligence**: Get real-time route assessments and bid recommendations powered by Gemini AI.
 
 ## 🛠️ Tech Stack
@@ -25,7 +26,7 @@ Payload Engine is a high-speed, industrial-grade pricing engine designed for Spr
 
 The application uses several constants to calculate quotes. These can be adjusted in `lib/types.ts`:
 
-- `VEHICLE_LIMITS`: Define max weight, length, width, and height.
+- `DEFAULT_VEHICLE`: Define the starting vehicle profile, including its name, maximum weight, length, width, and height.
 - `PRICING_CONSTANTS`: Define base CPM, deadhead CPM, minimum profit margin, and fuel surcharges.
 
 ## 🔑 Environment Variables

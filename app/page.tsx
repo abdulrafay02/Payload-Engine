@@ -5,7 +5,8 @@ import TelemetryBar from '@/components/TelemetryBar';
 import InputMatrix from '@/components/InputMatrix';
 import OutputDisplay from '@/components/OutputDisplay';
 import AuditTrail from '@/components/AuditTrail';
-import { LoadData, QuoteResult, AuditEntry } from '@/lib/types';
+import GeometricBackground from '@/components/GeometricBackground';
+import { LoadData, QuoteResult, AuditEntry, VehicleConfig, DEFAULT_VEHICLE } from '@/lib/types';
 import { calculateQuote } from '@/lib/pricingEngine';
 import { History, Save, Terminal } from 'lucide-react';
 
@@ -17,6 +18,9 @@ export default function PayloadApp() {
     deadheadMiles: 0,
     weight: 0,
   });
+
+  const [vehicle, setVehicle] = useState<VehicleConfig>(DEFAULT_VEHICLE);
+  const [isVehicleConfigOpen, setIsVehicleConfigOpen] = useState(false);
 
   const [aiNote, setAiNote] = useState<string | null>(null);
   const [auditEntries, setAuditEntries] = useState<AuditEntry[]>([]);
@@ -46,10 +50,10 @@ export default function PayloadApp() {
 
   const quote = useMemo(() => {
     if (loadData.loadedMiles > 0 && loadData.weight > 0) {
-      return calculateQuote(loadData);
+      return calculateQuote(loadData, vehicle);
     }
     return null;
-  }, [loadData]);
+  }, [loadData, vehicle]);
 
   const handleDataExtracted = (data: LoadData, note: string) => {
     setLoadData(data);
@@ -94,9 +98,10 @@ export default function PayloadApp() {
 
   return (
     <main suppressHydrationWarning className="min-h-screen bg-bg-main flex flex-col items-center justify-center p-4 md:p-8 font-sans selection:bg-safety-orange selection:text-black">
+      <GeometricBackground />
       {/* Main Content Box */}
       <div className="w-full max-w-md z-10 flex flex-col bg-bg-main relative">
-        <TelemetryBar />
+        <TelemetryBar vehicle={vehicle} onConfigClick={() => setIsVehicleConfigOpen(true)} />
 
         <div className="flex flex-col">
           <InputMatrix
@@ -105,6 +110,7 @@ export default function PayloadApp() {
             onManualChange={handleManualChange}
             onAiNoteUpdate={setAiNote}
             onReset={handleReset}
+            vehicle={vehicle}
           />
 
           <OutputDisplay
@@ -154,6 +160,42 @@ export default function PayloadApp() {
         entries={auditEntries}
         onStatusChange={handleStatusChange}
       />
+
+      {isVehicleConfigOpen && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+          <div className="bg-industrial-black border-2 border-safety-orange w-full max-w-sm flex flex-col p-4 relative shadow-2xl">
+            <h2 className="text-safety-orange font-black text-lg tracking-widest uppercase mb-4">[VEHICLE_CONFIGURATION]</h2>
+            <div className="flex flex-col gap-3">
+              <label className="text-xs text-text-muted font-bold uppercase tracking-widest flex flex-col">
+                <span>Loadout Name</span>
+                <input type="text" value={vehicle.name} onChange={e => setVehicle(v => ({...v, name: e.target.value}))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
+              </label>
+              <label className="text-xs text-text-muted font-bold uppercase tracking-widest flex flex-col">
+                <span>Max Weight (LBs)</span>
+                <input type="number" value={vehicle.maxWeight} onChange={e => setVehicle(v => ({...v, maxWeight: Number(e.target.value)}))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                <label className="text-xs text-text-muted font-bold uppercase tracking-widest flex flex-col">
+                  <span>Length&quot;</span>
+                  <input type="number" value={vehicle.maxLength} onChange={e => setVehicle(v => ({...v, maxLength: Number(e.target.value)}))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
+                </label>
+                <label className="text-xs text-text-muted font-bold uppercase tracking-widest flex flex-col">
+                  <span>Width&quot;</span>
+                  <input type="number" value={vehicle.maxWidth} onChange={e => setVehicle(v => ({...v, maxWidth: Number(e.target.value)}))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
+                </label>
+                <label className="text-xs text-text-muted font-bold uppercase tracking-widest flex flex-col">
+                  <span>Height&quot;</span>
+                  <input type="number" value={vehicle.maxHeight} onChange={e => setVehicle(v => ({...v, maxHeight: Number(e.target.value)}))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
+                </label>
+              </div>
+            </div>
+            <button onClick={() => setIsVehicleConfigOpen(false)} className="mt-6 w-full py-2 bg-safety-orange text-black font-black uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all">
+              [CONFIRM_SPECS]
+            </button>
+            <div className="absolute inset-y-0 left-0 w-[2px] bg-border-main rugged-line pointer-events-none" />
+          </div>
+        </div>
+      )}
     </main>
   );
 }

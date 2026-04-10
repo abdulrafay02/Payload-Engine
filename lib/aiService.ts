@@ -1,10 +1,10 @@
-import { LoadData } from "./types";
+import { LoadData, VehicleConfig } from "./types";
 
-export async function parseLoadText(text: string): Promise<{ data: LoadData; aiNote: string }> {
+export async function parseLoadText(text: string, vehicle: VehicleConfig): Promise<{ data: LoadData; aiNote: string }> {
   const response = await fetch("/api/ai", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "parseText", payload: { text } }),
+    body: JSON.stringify({ action: "parseText", payload: { text, vehicle } }),
   });
 
   const result = await response.json();
@@ -19,11 +19,11 @@ export async function parseLoadText(text: string): Promise<{ data: LoadData; aiN
   };
 }
 
-export async function parseLoadImage(base64Image: string): Promise<{ data: LoadData; aiNote: string }> {
+export async function parseLoadImage(base64Image: string, vehicle: VehicleConfig): Promise<{ data: LoadData; aiNote: string }> {
   const response = await fetch("/api/ai", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "parseImage", payload: { base64Image } }),
+    body: JSON.stringify({ action: "parseImage", payload: { base64Image, vehicle } }),
   });
 
   const result = await response.json();
@@ -38,11 +38,11 @@ export async function parseLoadImage(base64Image: string): Promise<{ data: LoadD
   };
 }
 
-export async function getMarketInsight(data: LoadData): Promise<string> {
+export async function getMarketInsight(data: LoadData, vehicle: VehicleConfig): Promise<string> {
   const response = await fetch("/api/ai", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "getInsight", payload: { data } }),
+    body: JSON.stringify({ action: "getInsight", payload: { data, vehicle } }),
   });
 
   const result = await response.json();
