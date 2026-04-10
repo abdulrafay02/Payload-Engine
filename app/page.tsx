@@ -95,7 +95,7 @@ export default function PayloadApp() {
   return (
     <main suppressHydrationWarning className="min-h-screen bg-bg-main flex flex-col items-center justify-center p-4 md:p-8 font-sans selection:bg-safety-orange selection:text-black">
       {/* Main Content Box */}
-      <div className="w-full max-w-md z-10 flex flex-col bg-bg-main relative shadow-2xl">
+      <div className="w-full max-w-md z-10 flex flex-col bg-bg-main relative">
         <TelemetryBar />
 
         <div className="flex flex-col">
