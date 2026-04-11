@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { AuditEntry } from '@/lib/types';
-import { History, X, TrendingUp, TrendingDown } from 'lucide-react';
+import { History, X, TrendingUp, TrendingDown, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface AuditTrailProps {
@@ -17,6 +17,57 @@ export default function AuditTrail({ isOpen, onClose, entries, onStatusChange }:
   const lostCount = entries.filter(e => e.status === 'lost').length;
   const totalDecided = wonCount + lostCount;
   const winRate = totalDecided > 0 ? (wonCount / totalDecided) * 100 : 0;
+
+  const handleExportCSV = () => {
+    if (entries.length === 0) return;
+
+    const headers = [
+      'ID', 'Timestamp', 'Origin', 'Destination', 'Loaded Miles', 
+      'Deadhead Miles', 'Weight (lbs)', 'Base Pay', 'Fuel Surcharge', 
+      'Deadhead Cost', 'Total Bid', 'CPM', 'Status', 'AI Note'
+    ];
+    
+    const csvRows = [headers.join(',')];
+
+    for (const entry of entries) {
+      const date = new Date(entry.timestamp).toISOString();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const escapeCSV = (val: any) => {
+        if (val === null || val === undefined) return '""';
+        const str = String(val).replace(/"/g, '""');
+        return `"${str}"`;
+      };
+      
+      const row = [
+        escapeCSV(entry.id),
+        escapeCSV(date),
+        escapeCSV(entry.origin),
+        escapeCSV(entry.destination),
+        escapeCSV(entry.loadedMiles),
+        escapeCSV(entry.deadheadMiles),
+        escapeCSV(entry.weight),
+        escapeCSV(entry.quote.basePay),
+        escapeCSV(entry.quote.fuelSurcharge),
+        escapeCSV(entry.quote.deadheadCost),
+        escapeCSV(entry.quote.recommendedBid),
+        escapeCSV(entry.quote.cpm),
+        escapeCSV(entry.status),
+        escapeCSV(entry.aiNote || '')
+      ];
+      csvRows.push(row.join(','));
+    }
+
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `payload_audit_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <AnimatePresence>
@@ -44,9 +95,16 @@ export default function AuditTrail({ isOpen, onClose, entries, onStatusChange }:
                 <History className="text-safety-orange" size={18} />
                 <h2 className="text-[10px] font-bold tracking-[0.3em] uppercase text-text-main">Audit_Log_Stream</h2>
               </div>
-              <button suppressHydrationWarning onClick={onClose} className="p-2 hover:bg-white/10 transition-colors text-text-muted hover:text-text-main">
-                <X size={20} />
-              </button>
+              <div className="flex items-center gap-1 relative z-10">
+                {entries.length > 0 && (
+                  <button suppressHydrationWarning onClick={handleExportCSV} className="p-2 hover:bg-white/10 transition-colors text-text-muted hover:text-safety-orange" title="Export Log to CSV">
+                    <Download size={18} />
+                  </button>
+                )}
+                <button suppressHydrationWarning onClick={onClose} className="p-2 hover:bg-white/10 transition-colors text-text-muted hover:text-text-main" title="Close Panel">
+                  <X size={20} />
+                </button>
+              </div>
               <div className="absolute inset-x-0 bottom-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
             </div>
 
