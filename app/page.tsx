@@ -1,112 +1,46 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState } from 'react';
 import TelemetryBar from '@/components/TelemetryBar';
 import InputMatrix from '@/components/InputMatrix';
 import OutputDisplay from '@/components/OutputDisplay';
 import AuditTrail from '@/components/AuditTrail';
 import GeometricBackground from '@/components/GeometricBackground';
 import BootScreen from '@/components/BootScreen';
-import { LoadData, QuoteResult, AuditEntry, VehicleConfig, DEFAULT_VEHICLE } from '@/lib/types';
-import { calculateQuote } from '@/lib/pricingEngine';
-import { History, Save, Terminal } from 'lucide-react';
-import { motion } from 'motion/react';
+import VehicleConfigModal from '@/components/VehicleConfigModal';
+import { usePayload } from '@/hooks/usePayload';
 
 export default function PayloadApp() {
-  const [loadData, setLoadData] = useState<LoadData>({
-    origin: '',
-    destination: '',
-    loadedMiles: 0,
-    deadheadMiles: 0,
-    weight: 0,
-  });
+  const {
+    loadData,
+    vehicle,
+    setVehicle,
+    aiNote,
+    setAiNote,
+    auditEntries,
+    quote,
+    handleDataExtracted,
+    handleManualChange,
+    handleReset,
+    handleCommit,
+    handleStatusChange,
+    clearAudit,
+  } = usePayload();
 
-  const [vehicle, setVehicle] = useState<VehicleConfig>(DEFAULT_VEHICLE);
   const [isVehicleConfigOpen, setIsVehicleConfigOpen] = useState(false);
-
-  const [aiNote, setAiNote] = useState<string | null>(null);
-  const [auditEntries, setAuditEntries] = useState<AuditEntry[]>([]);
   const [isAuditOpen, setIsAuditOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  // Load audit trail from localStorage on mount
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-    const saved = localStorage.getItem('payload_audit_trail');
-    if (saved) {
-      try {
-        setAuditEntries(JSON.parse(saved));
-      } catch (e) {
-        console.error('Failed to load audit trail', e);
-      }
-    }
-  }, []);
-
-  // Save audit trail to localStorage when it changes
-  useEffect(() => {
-    if (auditEntries.length > 0) {
-      localStorage.setItem('payload_audit_trail', JSON.stringify(auditEntries));
-    }
-  }, [auditEntries]);
-
-  const quote = useMemo(() => {
-    if (loadData.loadedMiles > 0 && loadData.weight > 0) {
-      return calculateQuote(loadData, vehicle);
-    }
-    return null;
-  }, [loadData, vehicle]);
-
-  const handleDataExtracted = (data: LoadData, note: string) => {
-    setLoadData(data);
-    setAiNote(note);
-  };
-
-  const handleManualChange = (updates: Partial<LoadData>) => {
-    setLoadData(prev => ({ ...prev, ...updates }));
-  };
-
-  const handleReset = () => {
-    setLoadData({
-      origin: '',
-      destination: '',
-      loadedMiles: 0,
-      deadheadMiles: 0,
-      weight: 0,
-    });
-    setAiNote(null);
-  };
-
-  const handleCommit = () => {
-    if (!quote) return;
-
-    const newEntry: AuditEntry = {
-      ...loadData,
-      id: crypto.randomUUID(),
-      timestamp: Date.now(),
-      quote,
-      aiNote: aiNote || undefined,
-      status: 'pending',
-    };
-
-    setAuditEntries(prev => [newEntry, ...prev]);
-  };
-
-  const handleStatusChange = (id: string, status: 'won' | 'lost') => {
-    setAuditEntries(prev => prev.map(entry =>
-      entry.id === id ? { ...entry, status } : entry
-    ));
-  };
 
   return (
     <main suppressHydrationWarning className="min-h-screen bg-bg-main flex flex-col items-center justify-center p-4 md:p-8 font-sans selection:bg-safety-orange selection:text-black">
       <GeometricBackground />
       <BootScreen />
+      
       {/* Main Content Box */}
-      <div
-        className="w-full max-w-md z-10 flex flex-col bg-bg-main relative"
-      >
-        <TelemetryBar vehicle={vehicle} onConfigClick={() => setIsVehicleConfigOpen(true)} />
+      <div className="w-full max-w-md z-10 flex flex-col bg-bg-main relative">
+        <TelemetryBar 
+          vehicle={vehicle} 
+          onConfigClick={() => setIsVehicleConfigOpen(true)} 
+        />
 
         <div className="flex flex-col">
           <InputMatrix
@@ -144,7 +78,7 @@ export default function PayloadApp() {
             </button>
             <button
               suppressHydrationWarning
-              onClick={() => setAuditEntries([])}
+              onClick={clearAudit}
               className="text-[8px] md:text-[9px] font-bold text-text-muted hover:text-text-main transition-colors uppercase tracking-widest"
             >
               [CLEAR]
@@ -166,41 +100,13 @@ export default function PayloadApp() {
         onStatusChange={handleStatusChange}
       />
 
-      {isVehicleConfigOpen && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-          <div className="bg-industrial-black border-2 border-safety-orange w-full max-w-sm flex flex-col p-4 relative shadow-2xl">
-            <h2 className="text-safety-orange font-black text-lg tracking-widest uppercase mb-4">[VEHICLE_CONFIGURATION]</h2>
-            <div className="flex flex-col gap-3">
-              <label className="text-xs text-text-muted font-bold uppercase tracking-widest flex flex-col">
-                <span>Loadout Name</span>
-                <input type="text" value={vehicle.name} onChange={e => setVehicle(v => ({ ...v, name: e.target.value }))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
-              </label>
-              <label className="text-xs text-text-muted font-bold uppercase tracking-widest flex flex-col">
-                <span>Max Weight (LBs)</span>
-                <input type="number" value={vehicle.maxWeight} onChange={e => setVehicle(v => ({ ...v, maxWeight: Number(e.target.value) }))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                <label className="text-xs text-text-muted font-bold uppercase tracking-widest flex flex-col">
-                  <span>Length&quot;</span>
-                  <input type="number" value={vehicle.maxLength} onChange={e => setVehicle(v => ({ ...v, maxLength: Number(e.target.value) }))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
-                </label>
-                <label className="text-xs text-text-muted font-bold uppercase tracking-widest flex flex-col">
-                  <span>Width&quot;</span>
-                  <input type="number" value={vehicle.maxWidth} onChange={e => setVehicle(v => ({ ...v, maxWidth: Number(e.target.value) }))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
-                </label>
-                <label className="text-xs text-text-muted font-bold uppercase tracking-widest flex flex-col">
-                  <span>Height&quot;</span>
-                  <input type="number" value={vehicle.maxHeight} onChange={e => setVehicle(v => ({ ...v, maxHeight: Number(e.target.value) }))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
-                </label>
-              </div>
-            </div>
-            <button onClick={() => setIsVehicleConfigOpen(false)} className="mt-6 w-full py-2 bg-safety-orange text-black font-black uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all">
-              [CONFIRM_SPECS]
-            </button>
-            <div className="absolute inset-y-0 left-0 w-[2px] bg-border-main rugged-line pointer-events-none" />
-          </div>
-        </div>
-      )}
+      <VehicleConfigModal 
+        isOpen={isVehicleConfigOpen}
+        onClose={() => setIsVehicleConfigOpen(false)}
+        vehicle={vehicle}
+        onVehicleChange={setVehicle}
+      />
     </main>
   );
 }
+ 

@@ -1,55 +1,38 @@
 import { LoadData, VehicleConfig } from "./types";
 
-export async function parseLoadText(text: string, vehicle: VehicleConfig): Promise<{ data: LoadData; aiNote: string }> {
+async function aiRequest<T>(action: string, payload: any): Promise<T> {
   const response = await fetch("/api/ai", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "parseText", payload: { text, vehicle } }),
+    body: JSON.stringify({ action, payload }),
   });
 
   const result = await response.json();
   
   if (!response.ok) {
-    throw new Error(result.error || "Failed to parse load text via AI");
+    throw new Error(result.error || `AI Request failed: ${action}`);
   }
 
+  return result;
+}
+
+export async function parseLoadText(text: string, vehicle: VehicleConfig): Promise<{ data: LoadData; aiNote: string }> {
+  const result = await aiRequest<{ data: LoadData; aiNote: string }>("parseText", { text, vehicle });
   return {
-    data: result.data as LoadData,
+    data: result.data,
     aiNote: result.aiNote || "No market context available."
   };
 }
 
 export async function parseLoadImage(base64Image: string, vehicle: VehicleConfig): Promise<{ data: LoadData; aiNote: string }> {
-  const response = await fetch("/api/ai", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "parseImage", payload: { base64Image, vehicle } }),
-  });
-
-  const result = await response.json();
-
-  if (!response.ok) {
-    throw new Error(result.error || "Failed to parse load image via AI");
-  }
-
+  const result = await aiRequest<{ data: LoadData; aiNote: string }>("parseImage", { base64Image, vehicle });
   return {
-    data: result.data as LoadData,
+    data: result.data,
     aiNote: result.aiNote || "No market context available."
   };
 }
 
 export async function getMarketInsight(data: LoadData, vehicle: VehicleConfig): Promise<string> {
-  const response = await fetch("/api/ai", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "getInsight", payload: { data, vehicle } }),
-  });
-
-  const result = await response.json();
-
-  if (!response.ok) {
-    throw new Error(result.error || "Failed to get market insights via AI");
-  }
-
+  const result = await aiRequest<{ insight: string }>("getInsight", { data, vehicle });
   return result.insight || "No specific market insights at this time.";
 }

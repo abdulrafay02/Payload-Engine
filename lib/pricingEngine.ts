@@ -1,4 +1,5 @@
-import { LoadData, QuoteResult, VehicleConfig, PRICING_CONSTANTS } from './types';
+import { LoadData, QuoteResult, VehicleConfig } from './types';
+import { PRICING_CONSTANTS } from './constants';
 
 export function calculateQuote(data: LoadData, vehicle: VehicleConfig): QuoteResult {
   const { loadedMiles, deadheadMiles, weight, dimensions } = data;
