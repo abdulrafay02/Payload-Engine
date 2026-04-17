@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { useTheme } from './ThemeProvider';
 import { Sun, Moon, Settings } from 'lucide-react';
 
+import { motion } from 'motion/react';
+
 interface TelemetryBarProps {
   vehicle: VehicleConfig;
   onConfigClick: () => void;
@@ -22,7 +24,7 @@ export default function TelemetryBar({ vehicle, onConfigClick }: TelemetryBarPro
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     setDateStr(new Date().toISOString().split('T')[0]);
-    
+
     const handleOnline = () => setIsOffline(false);
     const handleOffline = () => setIsOffline(true);
 
@@ -31,15 +33,18 @@ export default function TelemetryBar({ vehicle, onConfigClick }: TelemetryBarPro
 
     const fetchLocation = async () => {
       try {
-        const response = await fetch('https://ipapi.co/json/');
+        const response = await fetch('https://ipapi.co/json/', {
+          signal: AbortSignal.timeout(3000) // 3s timeout
+        });
+        if (!response.ok) throw new Error('Response not OK');
         const data = await response.json();
         if (data.city && data.region_code) {
           setLocation(`${data.city.toUpperCase()}, ${data.region_code}`);
         } else {
           setLocation('UNKNOWN');
         }
-      } catch (error) {
-        console.error('Failed to fetch location', error);
+      } catch (err) {
+        // Silent fail to avoid dev error portal
         setLocation('OFFLINE');
       }
     };
@@ -53,7 +58,12 @@ export default function TelemetryBar({ vehicle, onConfigClick }: TelemetryBarPro
   }, []);
 
   return (
-    <header className="w-full border-border-main flex items-stretch bg-industrial-black h-12 overflow-hidden relative">
+    <motion.header
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 1.0, duration: 0.5 }}
+      className="w-full border-border-main flex items-stretch bg-industrial-black h-12 overflow-hidden relative"
+    >
       {/* Left: Net Status Bar */}
       <div className={`w-6 shrink-0 flex items-center justify-center overflow-hidden transition-colors duration-300 relative ${isOffline ? 'bg-red-600' : 'bg-safety-orange'}`}>
         <span className="text-[7px] font-black text-black tracking-widest uppercase [writing-mode:vertical-rl] rotate-180">
@@ -82,7 +92,7 @@ export default function TelemetryBar({ vehicle, onConfigClick }: TelemetryBarPro
             <span className="text-[7px] font-mono text-safety-orange whitespace-nowrap">
               [LOC: {mounted ? location : 'DETECTING...'}]
             </span>
-            <button 
+            <button
               suppressHydrationWarning
               onClick={toggleTheme}
               className="text-gray-500 hover:text-safety-orange transition-colors"
@@ -105,10 +115,10 @@ export default function TelemetryBar({ vehicle, onConfigClick }: TelemetryBarPro
       {/* Right: Logo */}
       <div className="w-12 flex items-center justify-center p-1.5 shrink-0 relative">
         <div className="relative w-7 h-7">
-          <Image 
-            src="/logo.png" 
-            alt="Logo" 
-            fill 
+          <Image
+            src="/logo.png"
+            alt="Logo"
+            fill
             className={`object-contain ${theme === 'dark' ? 'brightness-125 contrast-125' : 'brightness-75 contrast-125'}`}
             referrerPolicy="no-referrer"
           />
@@ -116,6 +126,6 @@ export default function TelemetryBar({ vehicle, onConfigClick }: TelemetryBarPro
         <div className="absolute inset-y-0 left-0 w-[2px] bg-border-main rugged-line pointer-events-none" />
       </div>
       <div className="absolute inset-x-0 bottom-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
-    </header>
+    </motion.header>
   );
 }

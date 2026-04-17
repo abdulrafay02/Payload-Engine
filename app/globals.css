@@ -9,14 +9,14 @@
   --color-text-main: var(--text-main);
   --color-text-muted: var(--text-muted);
   --color-border-main: var(--border-main);
-  
+
   --font-sans: 'Space Grotesk', sans-serif;
   --font-mono: 'Space Mono', monospace;
 }
 
 :root {
-  --bg-main: #0a0a0a;
-  --bg-secondary: #1a1a1a;
+  --bg-main: #070707;
+  --bg-secondary: #121212;
   --accent-main: #ff6600;
   --text-main: #ffffff;
   --text-muted: #9ca3af;
@@ -71,8 +71,8 @@
 @layer components {
   .crt-overlay {
     @apply fixed inset-0 pointer-events-none z-50 transition-opacity duration-300;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+      linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
     background-size: 100% 4px, 3px 100%;
   }
 
@@ -93,12 +93,10 @@
     content: '';
     @apply absolute inset-0 border border-border-main pointer-events-none;
     filter: url(#rugged-filter);
-    clip-path: polygon(
-      0% 2px, 2px 2px, 2px 0%, 
-      calc(100% - 2px) 0%, calc(100% - 2px) 2px, 100% 2px, 
-      100% calc(100% - 2px), calc(100% - 2px) calc(100% - 2px), calc(100% - 2px) 100%, 
-      2px 100%, 2px calc(100% - 2px), 0% calc(100% - 2px)
-    );
+    clip-path: polygon(0% 2px, 2px 2px, 2px 0%,
+        calc(100% - 2px) 0%, calc(100% - 2px) 2px, 100% 2px,
+        100% calc(100% - 2px), calc(100% - 2px) calc(100% - 2px), calc(100% - 2px) 100%,
+        2px 100%, 2px calc(100% - 2px), 0% calc(100% - 2px));
   }
 
   .thick-divider {

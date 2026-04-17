@@ -22,11 +22,11 @@ export default function AuditTrail({ isOpen, onClose, entries, onStatusChange }:
     if (entries.length === 0) return;
 
     const headers = [
-      'ID', 'Timestamp', 'Origin', 'Destination', 'Loaded Miles', 
-      'Deadhead Miles', 'Weight (lbs)', 'Base Pay', 'Fuel Surcharge', 
+      'ID', 'Timestamp', 'Origin', 'Destination', 'Loaded Miles',
+      'Deadhead Miles', 'Weight (lbs)', 'Base Pay', 'Fuel Surcharge',
       'Deadhead Cost', 'Total Bid', 'CPM', 'Status', 'AI Note'
     ];
-    
+
     const csvRows = [headers.join(',')];
 
     for (const entry of entries) {
@@ -37,7 +37,7 @@ export default function AuditTrail({ isOpen, onClose, entries, onStatusChange }:
         const str = String(val).replace(/"/g, '""');
         return `"${str}"`;
       };
-      
+
       const row = [
         escapeCSV(entry.id),
         escapeCSV(date),
@@ -130,7 +130,7 @@ export default function AuditTrail({ isOpen, onClose, entries, onStatusChange }:
                         ${entry.quote.recommendedBid.toLocaleString()}
                       </span>
                     </div>
-                    
+
                     <div className="grid grid-cols-3 border-t border-border-main pt-3">
                       <div className="flex flex-col">
                         <span className="text-[8px] text-text-muted font-bold uppercase tracking-widest">Miles</span>
@@ -145,14 +145,14 @@ export default function AuditTrail({ isOpen, onClose, entries, onStatusChange }:
                         <div className="flex items-center gap-2">
                           {entry.status === 'pending' ? (
                             <div className="flex gap-1">
-                              <button 
+                              <button
                                 suppressHydrationWarning
                                 onClick={() => onStatusChange(entry.id, 'won')}
                                 className="text-[8px] px-1.5 py-0.5 bg-terminal-green/20 text-terminal-green border border-terminal-green/30 hover:bg-terminal-green hover:text-black transition-all font-bold uppercase"
                               >
                                 WON
                               </button>
-                              <button 
+                              <button
                                 suppressHydrationWarning
                                 onClick={() => onStatusChange(entry.id, 'lost')}
                                 className="text-[8px] px-1.5 py-0.5 bg-red-500/20 text-red-500 border border-red-500/30 hover:bg-red-500 hover:text-black transition-all font-bold uppercase"
@@ -161,9 +161,8 @@ export default function AuditTrail({ isOpen, onClose, entries, onStatusChange }:
                               </button>
                             </div>
                           ) : (
-                            <span className={`text-[10px] font-bold uppercase tracking-tighter ${
-                              entry.status === 'won' ? 'text-terminal-green' : 'text-red-500'
-                            }`}>
+                            <span className={`text-[10px] font-bold uppercase tracking-tighter ${entry.status === 'won' ? 'text-terminal-green' : 'text-red-500'
+                              }`}>
                               [{entry.status}]
                             </span>
                           )}

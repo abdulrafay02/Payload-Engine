@@ -5,6 +5,8 @@ import { LoadData, VehicleConfig } from '@/lib/types';
 import { parseLoadText, parseLoadImage, getMarketInsight } from '@/lib/aiService';
 import { Camera, FileText, Keyboard, Loader2, Sparkles, Info, X } from 'lucide-react';
 
+import { motion } from 'motion/react';
+
 interface InputMatrixProps {
   onDataExtracted: (data: LoadData, aiNote: string) => void;
   manualData: LoadData;
@@ -21,6 +23,19 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
   const [showIngestInfo, setShowIngestInfo] = useState(false);
   const [showVisionInfo, setShowVisionInfo] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+
+  // Animation variants
+  const rowVariants = {
+    hidden: { opacity: 0 },
+    visible: (i: number) => ({
+      opacity: 1,
+      transition: {
+        delay: 1.2 + (i * 0.1),
+        duration: 0.4,
+        ease: "easeOut"
+      }
+    })
+  };
 
   const handleGetInsights = async () => {
     setIsProcessing(true);
@@ -113,7 +128,13 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
         </div>
       )}
       {/* Row 0: Location Inputs */}
-      <div className="grid grid-cols-2 relative">
+      <motion.div
+        variants={rowVariants}
+        initial="hidden"
+        animate="visible"
+        custom={0}
+        className="grid grid-cols-2 relative"
+      >
         <div className="flex flex-col gap-0.5 bg-industrial-black p-2 relative">
           <label className="text-[7px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-1.5">
             <Keyboard size={7} className="text-safety-orange drop-shadow-[0_0_4px_#ff6600]" /> Origin
@@ -142,10 +163,16 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
           />
         </div>
         <div className="absolute inset-x-0 bottom-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
-      </div>
+      </motion.div>
 
       {/* Row 1: Manual Inputs */}
-      <div className="grid grid-cols-3 relative">
+      <motion.div
+        variants={rowVariants}
+        initial="hidden"
+        animate="visible"
+        custom={1}
+        className="grid grid-cols-3 relative"
+      >
         <div className="flex flex-col gap-0.5 bg-industrial-black p-2 relative">
           <label className="text-[7px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-1.5">
             <Keyboard size={7} className="text-safety-orange drop-shadow-[0_0_4px_#ff6600]" /> Loaded_Miles
@@ -192,10 +219,16 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
           </div>
         </div>
         <div className="absolute inset-x-0 bottom-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
-      </div>
+      </motion.div>
 
       {/* Row 2: AI Ingest & Vision side by side */}
-      <div className="grid grid-cols-1 md:grid-cols-2 relative">
+      <motion.div
+        variants={rowVariants}
+        initial="hidden"
+        animate="visible"
+        custom={2}
+        className="grid grid-cols-1 md:grid-cols-2 relative"
+      >
         {isProcessing && (
           <div className="absolute inset-0 z-20 bg-black/90 flex flex-col items-center justify-center gap-4">
             <Loader2 className="animate-spin text-safety-orange drop-shadow-[0_0_6px_#ff6600]" size={40} />
@@ -279,7 +312,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
             </div>
           )}
 
-          <div 
+          <div
             className="h-full relative"
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -295,10 +328,16 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
           </div>
         </div>
         <div className="absolute inset-x-0 bottom-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
-      </div>
+      </motion.div>
 
       {/* AI Intel Action Bar */}
-      <div className="bg-industrial-black relative">
+      <motion.div
+        variants={rowVariants}
+        initial="hidden"
+        animate="visible"
+        custom={3}
+        className="bg-industrial-black relative"
+      >
         <button
           suppressHydrationWarning
           onClick={handleGetInsights}
@@ -307,7 +346,7 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
           <Sparkles size={12} /> [AI_MARKET_INTEL]
         </button>
         <div className="absolute inset-x-0 bottom-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -6,9 +6,11 @@ import InputMatrix from '@/components/InputMatrix';
 import OutputDisplay from '@/components/OutputDisplay';
 import AuditTrail from '@/components/AuditTrail';
 import GeometricBackground from '@/components/GeometricBackground';
+import BootScreen from '@/components/BootScreen';
 import { LoadData, QuoteResult, AuditEntry, VehicleConfig, DEFAULT_VEHICLE } from '@/lib/types';
 import { calculateQuote } from '@/lib/pricingEngine';
 import { History, Save, Terminal } from 'lucide-react';
+import { motion } from 'motion/react';
 
 export default function PayloadApp() {
   const [loadData, setLoadData] = useState<LoadData>({
@@ -99,8 +101,11 @@ export default function PayloadApp() {
   return (
     <main suppressHydrationWarning className="min-h-screen bg-bg-main flex flex-col items-center justify-center p-4 md:p-8 font-sans selection:bg-safety-orange selection:text-black">
       <GeometricBackground />
+      <BootScreen />
       {/* Main Content Box */}
-      <div className="w-full max-w-md z-10 flex flex-col bg-bg-main relative">
+      <div
+        className="w-full max-w-md z-10 flex flex-col bg-bg-main relative"
+      >
         <TelemetryBar vehicle={vehicle} onConfigClick={() => setIsVehicleConfigOpen(true)} />
 
         <div className="flex flex-col">
@@ -168,24 +173,24 @@ export default function PayloadApp() {
             <div className="flex flex-col gap-3">
               <label className="text-xs text-text-muted font-bold uppercase tracking-widest flex flex-col">
                 <span>Loadout Name</span>
-                <input type="text" value={vehicle.name} onChange={e => setVehicle(v => ({...v, name: e.target.value}))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
+                <input type="text" value={vehicle.name} onChange={e => setVehicle(v => ({ ...v, name: e.target.value }))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
               </label>
               <label className="text-xs text-text-muted font-bold uppercase tracking-widest flex flex-col">
                 <span>Max Weight (LBs)</span>
-                <input type="number" value={vehicle.maxWeight} onChange={e => setVehicle(v => ({...v, maxWeight: Number(e.target.value)}))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
+                <input type="number" value={vehicle.maxWeight} onChange={e => setVehicle(v => ({ ...v, maxWeight: Number(e.target.value) }))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
               </label>
               <div className="grid grid-cols-3 gap-2">
                 <label className="text-xs text-text-muted font-bold uppercase tracking-widest flex flex-col">
                   <span>Length&quot;</span>
-                  <input type="number" value={vehicle.maxLength} onChange={e => setVehicle(v => ({...v, maxLength: Number(e.target.value)}))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
+                  <input type="number" value={vehicle.maxLength} onChange={e => setVehicle(v => ({ ...v, maxLength: Number(e.target.value) }))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
                 </label>
                 <label className="text-xs text-text-muted font-bold uppercase tracking-widest flex flex-col">
                   <span>Width&quot;</span>
-                  <input type="number" value={vehicle.maxWidth} onChange={e => setVehicle(v => ({...v, maxWidth: Number(e.target.value)}))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
+                  <input type="number" value={vehicle.maxWidth} onChange={e => setVehicle(v => ({ ...v, maxWidth: Number(e.target.value) }))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
                 </label>
                 <label className="text-xs text-text-muted font-bold uppercase tracking-widest flex flex-col">
                   <span>Height&quot;</span>
-                  <input type="number" value={vehicle.maxHeight} onChange={e => setVehicle(v => ({...v, maxHeight: Number(e.target.value)}))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
+                  <input type="number" value={vehicle.maxHeight} onChange={e => setVehicle(v => ({ ...v, maxHeight: Number(e.target.value) }))} className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none" />
                 </label>
               </div>
             </div>

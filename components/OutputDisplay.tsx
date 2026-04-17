@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { QuoteResult } from '@/lib/types';
 import { AlertTriangle } from 'lucide-react';
 
+import { motion } from 'motion/react';
+
 interface OutputDisplayProps {
   quote: QuoteResult | null;
   aiNote: string | null;
@@ -63,7 +65,12 @@ export default function OutputDisplay({ quote, aiNote, onCommit }: OutputDisplay
   }, [aiNote]);
 
   return (
-    <section className="flex flex-col">
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 1.6, duration: 0.5 }}
+      className="flex flex-col"
+    >
       {/* Primary Output */}
       <div className={`p-3 flex items-center justify-between transition-colors relative ${hasCriticalWarnings ? 'bg-red-600/20' : 'bg-text-main'}`}>
         <div className="flex flex-col">
@@ -142,6 +149,6 @@ export default function OutputDisplay({ quote, aiNote, onCommit }: OutputDisplay
         </div>
         <div className="absolute inset-x-0 top-0 h-[2px] bg-border-main rugged-line pointer-events-none" />
       </div>
-    </section>
+    </motion.section>
   );
 }
