@@ -5,7 +5,7 @@ import { LoadData, VehicleConfig } from '@/lib/types';
 import { parseLoadText, parseLoadImage, getMarketInsight } from '@/lib/aiService';
 import { Camera, FileText, Keyboard, Loader2, Sparkles, Info, X } from 'lucide-react';
 
-import { motion } from 'motion/react';
+import { motion, Variants } from 'motion/react';
 
 interface InputMatrixProps {
   onDataExtracted: (data: LoadData, aiNote: string) => void;
@@ -25,14 +25,14 @@ export default function InputMatrix({ onDataExtracted, manualData, onManualChang
   const [isDragging, setIsDragging] = useState(false);
 
   // Animation variants
-  const rowVariants = {
+  const rowVariants: Variants = {
     hidden: { opacity: 0 },
     visible: (i: number) => ({
       opacity: 1,
       transition: {
         delay: 1.2 + (i * 0.1),
         duration: 0.4,
-        ease: "easeOut"
+        ease: "easeOut" as const
       }
     })
   };
