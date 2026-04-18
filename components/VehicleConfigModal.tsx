@@ -16,7 +16,7 @@ export default function VehicleConfigModal({ isOpen, onClose, vehicle, onVehicle
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-industrial-black/80 z-50 flex items-center justify-center p-4">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -37,7 +37,7 @@ export default function VehicleConfigModal({ isOpen, onClose, vehicle, onVehicle
               type="text" 
               value={vehicle.name} 
               onChange={e => onVehicleChange({ ...vehicle, name: e.target.value })} 
-              className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none focus:bg-black/60 transition-colors" 
+              className="w-full mt-1 bg-industrial-grey/30 border-b border-safety-orange p-2 text-text-main outline-none focus:bg-industrial-grey/50 transition-colors" 
             />
           </label>
           <label className="text-xs text-text-muted font-bold uppercase tracking-widest flex flex-col">
@@ -46,7 +46,7 @@ export default function VehicleConfigModal({ isOpen, onClose, vehicle, onVehicle
               type="number" 
               value={vehicle.maxWeight} 
               onChange={e => onVehicleChange({ ...vehicle, maxWeight: Number(e.target.value) })} 
-              className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none focus:bg-black/60 transition-colors" 
+              className="w-full mt-1 bg-industrial-grey/30 border-b border-safety-orange p-2 text-text-main outline-none focus:bg-industrial-grey/50 transition-colors" 
             />
           </label>
           <div className="grid grid-cols-3 gap-2">
@@ -56,7 +56,7 @@ export default function VehicleConfigModal({ isOpen, onClose, vehicle, onVehicle
                 type="number" 
                 value={vehicle.maxLength} 
                 onChange={e => onVehicleChange({ ...vehicle, maxLength: Number(e.target.value) })} 
-                className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none focus:bg-black/60 transition-colors" 
+                className="w-full mt-1 bg-industrial-grey/30 border-b border-safety-orange p-2 text-text-main outline-none focus:bg-industrial-grey/50 transition-colors" 
               />
             </label>
             <label className="text-xs text-text-muted font-bold uppercase tracking-widest flex flex-col">
@@ -65,7 +65,7 @@ export default function VehicleConfigModal({ isOpen, onClose, vehicle, onVehicle
                 type="number" 
                 value={vehicle.maxWidth} 
                 onChange={e => onVehicleChange({ ...vehicle, maxWidth: Number(e.target.value) })} 
-                className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none focus:bg-black/60 transition-colors" 
+                className="w-full mt-1 bg-industrial-grey/30 border-b border-safety-orange p-2 text-text-main outline-none focus:bg-industrial-grey/50 transition-colors" 
               />
             </label>
             <label className="text-xs text-text-muted font-bold uppercase tracking-widest flex flex-col">
@@ -74,7 +74,7 @@ export default function VehicleConfigModal({ isOpen, onClose, vehicle, onVehicle
                 type="number" 
                 value={vehicle.maxHeight} 
                 onChange={e => onVehicleChange({ ...vehicle, maxHeight: Number(e.target.value) })} 
-                className="w-full mt-1 bg-black/40 border-b border-safety-orange p-2 text-white outline-none focus:bg-black/60 transition-colors" 
+                className="w-full mt-1 bg-industrial-grey/30 border-b border-safety-orange p-2 text-text-main outline-none focus:bg-industrial-grey/50 transition-colors" 
               />
             </label>
           </div>

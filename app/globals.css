@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Allow hover states to trigger on touch/mobile devices (bypassing Tailwind v4 default media query) */
+@variant hover (&:hover);
+@variant group-hover (:merge(.group):hover &);
+@variant peer-hover (:merge(.peer):hover ~ &);
+
 @theme {
   --color-industrial-black: var(--bg-main);
   --color-industrial-grey: var(--bg-secondary);

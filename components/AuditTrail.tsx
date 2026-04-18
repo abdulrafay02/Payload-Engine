@@ -28,7 +28,7 @@ export default function AuditTrail({ isOpen, onClose, entries, onStatusChange }:
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/80 z-[60] backdrop-blur-sm"
+            className="fixed inset-0 bg-industrial-black/80 z-[60] backdrop-blur-sm"
           />
 
           <motion.div
@@ -64,11 +64,11 @@ export default function AuditTrail({ isOpen, onClose, entries, onStatusChange }:
                 </div>
               ) : (
                 entries.map((entry, idx) => (
-                  <AuditEntryItem 
-                    key={entry.id} 
-                    entry={entry} 
-                    onStatusChange={onStatusChange} 
-                    isLast={idx === entries.length - 1} 
+                  <AuditEntryItem
+                    key={entry.id}
+                    entry={entry}
+                    onStatusChange={onStatusChange}
+                    isLast={idx === entries.length - 1}
                   />
                 ))
               )}
@@ -97,7 +97,7 @@ export default function AuditTrail({ isOpen, onClose, entries, onStatusChange }:
 
 function AuditEntryItem({ entry, onStatusChange, isLast }: { entry: AuditEntry; onStatusChange: (id: string, status: 'won' | 'lost') => void; isLast: boolean }) {
   return (
-    <div className="p-4 flex flex-col gap-3 bg-black/20 relative">
+    <div className="p-4 flex flex-col gap-3 bg-industrial-grey/30 relative">
       <div className="flex justify-between items-start">
         <div className="flex flex-col gap-1">
           <span className="text-xs font-bold text-safety-orange uppercase tracking-tight">
@@ -146,10 +146,10 @@ function EntryDetail({ label, value }: { label: string; value: string | number }
 }
 
 function StatusButton({ label, onClick, type }: { label: string; onClick: () => void; type: 'won' | 'lost' }) {
-  const styles = type === 'won' 
-    ? "bg-terminal-green/20 text-terminal-green border-terminal-green/30 hover:bg-terminal-green" 
+  const styles = type === 'won'
+    ? "bg-terminal-green/20 text-terminal-green border-terminal-green/30 hover:bg-terminal-green"
     : "bg-red-500/20 text-red-500 border-red-500/30 hover:bg-red-500";
-  
+
   return (
     <button
       suppressHydrationWarning
